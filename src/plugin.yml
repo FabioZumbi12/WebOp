@@ -1,0 +1,7 @@
+name: WebOp2
+main: me.jayfella.webop2.WebOp2Plugin
+version: 2.0.0
+author: jayfella
+depend: [ ]
+load: STARTUP
+loadbefore: [ PermissionsEx, WorldEdit, WorldGuard, Vault, MultiVerse-Core, MultiVerse-Inventories, WorldBorder, VanishNoPacket, dynmap ]

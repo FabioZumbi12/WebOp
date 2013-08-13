@@ -1,0 +1,98 @@
+
+<div class='container'>
+    <div class="titleHeader">Preface</div>
+    If a player has been opped, they are universally entitled to every permission, regardless of whether or not they are on any of these lists.
+    If you are opped, you do not need to be on any of these lists.<br/><br/>
+    In the interest of security, only opped users are able to modify these lists.
+</div>
+
+<div class="containerSpacer"></div>
+
+<div class="container">
+
+    <div class="titleHeader">Server Whitelist</div>
+    This whitelist determines which players are allowed to login to the gameserver whilst whitelist mode is enabled. Users that are not on this list are denied
+    the ability to play on your server if whitelist mode is enabled. If whitelist mode is disabled, any player can join the server.
+    <br/>
+    <br/>
+    Whitelist mode is currently: <strong>{serverwhitelistboolean}</strong><br/>
+    <br/>
+
+    <ol id="serverWhitelistList" class='jqSelectable'>
+        {serverWhitelistedPlayers}
+    </ol>
+
+    <button id="serverWhitelistRemoveSelectedButton" class='smallGreenButton'>Remove Selected</button>&nbsp;<span style="vertical-align: middle;" id='serverWhitelistRemoveSelectedSpan'></span><br/>
+    <br/>
+    <input style='width: 500px;' class="manyPlayersSearchInput" type='text' id='ServerWhitelistAddPlayersInput'>
+    &nbsp;
+    <button class='smallGreenButton' id="serverWhitelistAddPlayersButton">Add Players</button>
+
+</div>
+
+<div class="containerSpacer"></div>
+
+<div class="container">
+
+    <div class="titleHeader">WebOp Login</div>
+    This whitelist determines which players are entitled to login to the WebOp service. Users that are not on this list are refused access to all functionality
+    on this website. If a user is removed from this list and is already logged in, their session becomes invalid and are thus unable to use the WebOp service.
+    <br/>
+
+    <ol id="webopWhitelistList" class='jqSelectable'>
+        {WebOpWhitelistedUsers}
+    </ol>
+
+    <button id="webopWhitelistRemoveSelectedButton" class='smallGreenButton'>Remove Selected</button>&nbsp;<span style="vertical-align: middle;" id='webopWhitelistRemoveSelectedSpan'></span><br/>
+    <br/>
+    <input style='width: 500px;' class="manyPlayersSearchInput" type='text' id='webopWhitelistAddPlayersInput'>
+    &nbsp;
+    <button class='smallGreenButton' id="webopWhitelistAddPlayersButton">Add Players</button>
+
+</div>
+
+<div class="containerSpacer"></div>
+
+<div class="container">
+
+    <div class="titleHeader">Console View</div>
+    This whitelist determines which players are entitled to view the console in the WebOp service. Users are additionally allowed to execute commands as themselves
+    only (just like 'in-game'), and are denied the ability to execute commands as the ConsoleCommandSender.
+
+    <ol id="consoleViewWhitelistList" class='jqSelectable'>
+        {consoleViewWhitelistedUsers}
+    </ol>
+
+    <button id="consoleViewWhitelistRemoveSelectedButton" class='smallGreenButton'>Remove Selected</button>&nbsp;<span style="vertical-align: middle;" id='consoleViewWhitelistRemoveSelectedSpan'></span><br/>
+    <br/>
+    <input style='width: 500px;' class="manyPlayersSearchInput" type='text' id='consoleViewWhitelistAddPlayersInput'>
+    &nbsp;
+    <button class='smallGreenButton' id="consoleViewWhitelistAddPlayersButton">Add Players</button>
+
+</div>
+
+<div class="containerSpacer"></div>
+
+<div class="container">
+
+    <div class="titleHeader">Console as OP</div>
+    This whitelist determines which players are entitled to issue commands in the WebOp console as the ConsoleCommandSender.<br/>
+    <strong style='color: darkred;'>**WARNING** This entitlement effectively gives the player OP permissions and will be able to issue ANY CONSOLE COMMAND from the WebOp console.</strong>
+
+    <ol id="consoleOpWhitelistList" class='jqSelectable'>
+        {consoleOpWhitelistedUsers}
+    </ol>
+
+    <button id="consoleOpWhitelistRemoveSelectedButton" class='smallGreenButton'>Remove Selected</button>&nbsp;<span style="vertical-align: middle;" id='consoleOpWhitelistRemoveSelectedSpan'></span><br/>
+    <br/>
+    <input style='width: 500px;' class="manyPlayersSearchInput" type='text' id='consoleOpWhitelistAddPlayersInput'>
+    &nbsp;
+    <button class='smallGreenButton' id="consoleOpWhitelistAddPlayersButton">Add Players</button>
+
+</div>
+
+<script type="text/javascript" src="jscript.php?jayfella.playerautocomplete.js"></script>
+<script type="text/javascript" src="jscript.php?jayfella.serverwhitelist.js"></script>
+<script type="text/javascript" src="jscript.php?jayfella.webopwhitelist.js"></script>
+<script type="text/javascript" src="jscript.php?jayfella.consoleviewwhitelist.js"></script>
+<script type="text/javascript" src="jscript.php?jayfella.consoleopwhitelist.js"></script>

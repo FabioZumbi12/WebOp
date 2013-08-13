@@ -1,0 +1,110 @@
+<div style='width:280px; margin: 30px auto; padding: 20px; background-color: #F1F1F1; border-radius: 3px;'>
+    <div class='tablecontainer'>
+
+        <ul class='alertUl green'>
+            <li id="loginStatus">Enter your <strong>minecraft</strong> login details.</li>
+
+        </ul>
+
+        <form action="login.php" method="post">
+
+            <div class='tablerow'>
+
+                <div class='tableleft'>
+                    <span>Username:</span>
+                </div>
+
+                <div class='tableright'>
+                    <input type='text' name='username' class='loginTextbox' title='Your minecraft login'>
+                </div>
+
+            </div>
+
+            <div class='tablerow'>
+
+                <div class='tableleft'>
+                    <span>Password:</span>
+                </div>
+
+                <div class='tableight'>
+                    <input type='password' name='password' class='loginTextbox' title='Your minecraft password'>
+                </div>
+
+            </div>
+
+            <div class='tablerow'>
+
+                <div class='tableleft'></div>
+
+                <div class='tableright'>
+                    <button class="blueButton" type='submit' value='Login'>Login</button>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!--
+<script type="text/javascript">
+
+    window.onbeforeunload = function() { if (typeof ws !== 'undefined') ws.close(); };
+
+    $('#loginForm').submit(function(evt)
+    {
+        evt.preventDefault();
+        $('#loginStatus').text("Logging in...");
+
+        var $form = $(this);
+        var $inputs = $form.find('input, select, button, textarea');
+        var serializedData = $form.serialize();
+
+        $inputs.prop('disabled', true);
+
+        var ws = new WebSocket("ws://localhost:9003");
+
+        ws.onopen = function()
+        {
+            ws.send("VALIDATE >> " + serializedData.toString());
+        };
+
+        ws.onclose = function(e)
+        {
+            $inputs.prop('disabled', false);
+            $('#loginStatus').text("Invalid username or password!");
+        };
+
+        ws.onmessage = function(e)
+        {
+            var data = e.data;
+
+            if (data === "VALID")
+            {
+                /*var request = $.ajax({ url: 'login.php', type: 'post', data: serializedData });
+
+                request.done(function(response, textStatus, jqXHR)
+                {
+                    if (response !== 'OK')
+                    {
+                        // TODO: not valid login details.
+                        $('#loginStatus').text("Invalid username or password!");
+                        $inputs.prop('disabled', false);
+                    }
+                });*/
+
+
+            }
+            else
+            {
+                // TODO: not valid login details.
+                $('#loginStatus').text("Invalid username or password!");
+                $inputs.prop('disabled', false);
+            }
+        };
+
+    });
+
+
+
+</script>-->

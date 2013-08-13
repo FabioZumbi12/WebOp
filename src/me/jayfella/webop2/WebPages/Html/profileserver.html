@@ -1,0 +1,35 @@
+<div class="container">
+
+    <div class="titleHeader">Server Profiler</div>
+    The server profiler displays various information regarding the state of your server, and may help locate areas of lag.
+    <br/><br/>
+
+    <div class="subContainer">
+
+        Find all chunks with more than
+        &nbsp;
+        <input id="entitiesInChunkSpinner" type="text" style="width: 35px; font-size: 11px;" value="10" readonly>
+        &nbsp;
+        <input placeholder="entity name(s)..." id="entitiesInChunkEntities" type="text" style="width: 300px;">
+
+        <input type="checkbox" id="entitiesInChunkAllEntities" style="vertical-align: middle;"><label for="entitiesInChunkAllEntities" style="vertical-align: middle; margin-right: 10px;">All Entities</label>
+
+        <button id="submitEntitiesInChunkButtun" class="smallGreenButton">Search</button>
+        <button id="entitiesInChunkEntitiesClearButton" class="smallBlackButton" style="float: right;">Clear Results</button>
+
+        <div id="entitiesInChunkResult" style="font-family: Consolas,Menlo,Monaco,'Lucida Console','Liberation Mono','DejaVu Sans Mono','Bitstream Vera Sans Mono','Courier New','monospace,serif'; font-size: 11px;"></div>
+
+    </div>
+
+    <div class="containerSpacer"></div>
+
+    <div class="subContainer">
+        Count all entities
+    </div>
+
+
+</div>
+
+
+<script type="text/javascript" src="jscript.php?jayfella.serverprofiler.js"></script>
+<script type="text/javascript" src="jscript.php?jayfella.teleport.js"></script>
