@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import me.jayfella.webop2.PluginContext;
 import me.jayfella.webop2.Profiler.WebOpPluginManager;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.craftbukkit.v1_6_R2.scheduler.CraftScheduler;
+import org.bukkit.craftbukkit.v1_7_R3.scheduler.CraftScheduler;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
