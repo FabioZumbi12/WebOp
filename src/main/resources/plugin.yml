@@ -4,3 +4,8 @@ version: ${project.version}
 author: jayfella & FabioZumbi12
 api-version: 1.13
 softdepend: [ "Essentials", "Vault" ]
+commands:
+  WebOp:
+    description: "Main command for WebOp."
+    aliases: [webop, wop]
+    permission: "webop.reload"

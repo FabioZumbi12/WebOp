@@ -33,14 +33,17 @@ public class ConsoleMonitor extends SocketSubscription {
         ((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(filter);
     }
 
-    public void executeCommand(final String command, final boolean asConsole, final String username) {
+    public void executeCommand(String command, final boolean asConsole, final String username) {
         if (asConsole) {
             final boolean isOp = this.context.getPlugin().getServer().getOfflinePlayer(username).isOp();
             if (isOp | this.context.getSessionManager().canExecuteConsoleOpCommands(username)) {
                 final String resp = ChatColor.DARK_GREEN + "Player " + ChatColor.GREEN + username + ChatColor.DARK_GREEN + " issued console command: " + ChatColor.GOLD + command;
                 this.context.getPlugin().getLogger().log(Level.INFO, resp);
+
+                if (command.startsWith("/")) command = command.substring(1);
+                String finalCommand = command;
                 Bukkit.getScheduler().callSyncMethod(context.getPlugin(), () ->
-                        Bukkit.dispatchCommand(this.context.getPlugin().getServer().getConsoleSender(), command));
+                        Bukkit.dispatchCommand(this.context.getPlugin().getServer().getConsoleSender(), finalCommand));
             } else {
                 final String errorString = ChatColor.RED + "Player " + ChatColor.GREEN + username + ChatColor.RED + " tried to execute a command as console without permission: " + ChatColor.GOLD + command;
                 this.context.getPlugin().getLogger().log(Level.WARNING, errorString);
@@ -52,10 +55,12 @@ public class ConsoleMonitor extends SocketSubscription {
                 this.context.getPlugin().getLogger().log(Level.WARNING, errorString);
             } else {
                 if (command.startsWith("/")) {
+                    String finalCommand1 = command;
                     Bukkit.getScheduler().callSyncMethod(context.getPlugin(), () ->
-                            Bukkit.dispatchCommand(player, command.substring(1)));
+                            Bukkit.dispatchCommand(player, finalCommand1.substring(1)));
                 } else {
-                    Bukkit.getScheduler().runTask(context.getPlugin(), () -> player.chat(command));
+                    String finalCommand2 = command;
+                    Bukkit.getScheduler().runTask(context.getPlugin(), () -> player.chat(finalCommand2));
                 }
             }
         }
@@ -88,6 +93,17 @@ public class ConsoleMonitor extends SocketSubscription {
                 .replace("u00A7F", "<span style='color: #ffffff'>") // &f
                 .replace("u00A7r", "<span style='color: #ffffff'>") // &r
 
+                .replace("u00A7k", "") // &k
+                .replace("u00A7K", "") // &k
+                .replace("u00A7l", "<span style='font-weight: bold'>") // &l
+                .replace("u00A7L", "<span style='font-weight: bold'>") // &l
+                .replace("u00A7o", "<span style='font-style: italic'>") // &o
+                .replace("u00A7O", "<span style='font-style: italic'>") // &o
+                .replace("u00A7m", "<span style='text-decoration: line-through'>") // &m
+                .replace("u00A7M", "<span style='text-decoration: line-through'>") // &m
+                .replace("u00A7n", "<span style='text-decoration: underline'>") // &n
+                .replace("u00A7M", "<span style='text-decoration: underline'>") // &n
+
                 .replace("\\u001B[m", "<span style='color: #c0c0c0'>") // &0
                 .replace("\\u001B[0;34;22m", "<span style='color: #0000aa'>") // &1
                 .replace("\\u001B[0;32;22m", "<span style='color: #00aa00'>") // &2
@@ -104,17 +120,17 @@ public class ConsoleMonitor extends SocketSubscription {
                 .replace("\\u001B[0;35;1m", "<span style='color: #ff55ff'>") // &d
                 .replace("\\u001B[0;33;1m", "<span style='color: #ffff55'>") // &e
                 .replace("\\u001B[0;37;1m", "<span style='color: #ffffff'>") // &f
-                .replace("\\", "") // escaped stringsint count = 0;
+                .replace("\\", "") // escaped strings
 
                 //removing acentuation
                 .replaceAll("(u00E1|u00E3)", "a")
                 .replaceAll("(u00C1|u00C3)", "A")
-                .replaceAll("(u00E9|u00EA)", "e")
+                .replaceAll("(u00E9|u00B4|u00EA)", "e")
                 .replaceAll("(u00C9|u00CA)", "E")
                 .replaceAll("u00CD", "I")
                 .replaceAll("u00ED", "i")
-                .replaceAll("(u00D3|u00D5)", "O")
-                .replaceAll("(u00F3|u00F5)", "o")
+                .replaceAll("(u00D3|u00D4|u00D5)", "O")
+                .replaceAll("(u00F3|u00F4|u00F5)", "o")
                 .replaceAll("u00DA", "U")
                 .replaceAll("u00FA", "u")
                 .replaceAll("u00C7", "C")

@@ -5,13 +5,17 @@
 package me.jayfella.webop.website;
 
 import me.jayfella.webop.WebOpPlugin;
+import org.bukkit.Bukkit;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
 
 public abstract class WebPage {
     private int responseCode;
@@ -49,6 +53,7 @@ public abstract class WebPage {
             }
             result = result.replace("{main_menu}", this.loadResource("me/jayfella/webop/website/html/mainmenu.html"));
             result = result.replace("{username}", username);
+            result = result.replace("{userlinks}", userLinks());
         } else {
             result = result.replace("{main_menu}", "");
         }
@@ -56,16 +61,70 @@ public abstract class WebPage {
     }
 
     public String loadResource(final String path) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         try (final InputStream inp = this.getClass().getClassLoader().getResourceAsStream(path);
              final BufferedReader rd = new BufferedReader(new InputStreamReader(inp))) {
             String s;
             while (null != (s = rd.readLine())) {
-                output = output + s + "\n";
+                output.append(s).append("\n");
             }
         } catch (Exception ex) {
             return "";
         }
-        return output;
+        return output.toString();
     }
+
+    public final String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return encoding.decode(ByteBuffer.wrap(encoded)).toString();
+    }
+
+    private String userLinks() {
+        File pluginDir = WebOpPlugin.PluginContext.getPlugin().getDataFolder();
+
+        FilenameFilter textFilter = (dir, name) -> name.toLowerCase().endsWith(".txt");
+
+        File[] files = pluginDir.listFiles(textFilter);
+
+        if (files.length > 0) {
+            StringBuilder sb = new StringBuilder();
+
+            for (File file : files) {
+                String content;
+
+                try {
+                    content = this.readFile(file.getCanonicalPath(), Charset.availableCharsets().get("UTF-8"));
+                } catch (IOException ex) {
+                    Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+                    continue;
+                }
+
+                String[] lines = content.split("\n");
+
+                sb.append("<li class='has-sub '>")
+                        .append("<a href='#'>").append(file.getName().replace(".txt", "")).append("</a>")
+                        .append("<ul>");
+
+
+                for (String line : lines) {
+                    String[] values = line.split(">>");
+
+                    if (values.length != 2)
+                        continue;
+
+                    sb
+                            .append("<li>")
+                            .append("<a href='").append(values[1].trim()).append("'>").append(values[0].trim()).append("</a>")
+                            .append("</li>");
+                }
+
+                sb.append("</ul>").append("</li>");
+            }
+
+            return sb.toString();
+        } else {
+            return "";
+        }
+    }
+
 }

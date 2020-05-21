@@ -4,15 +4,25 @@ function subscribeToConsole()
     webopSocket.send(msg);
 }
 
+var atBottom = true;
+$("#consoleBottom").change( function()
+{
+    atBottom = $(this).is(':checked');
+});
+
 function parseConsoleResponse(message)
 {
     var msg = message.replace("case=consoleData;", "");
     var elem = $("#consoleOutput");
-    var atBottom = (elem[0].scrollHeight - elem.scrollTop() === elem.outerHeight());
-    
+
+    var atBottom2 = (elem[0].scrollHeight - elem.scrollTop() === elem.outerHeight());
+        if (atBottom) {
+            atBottom2 = atBottom;
+        } else {
+            atBottom2 = (elem[0].scrollHeight - elem.scrollTop() === elem.outerHeight());
+        }
     $("#consoleOutput").append(msg);
-    
-    if (atBottom) $(elem).scrollTop($(elem)[0].scrollHeight);
+    if (atBottom2) $(elem).scrollTop($(elem)[0].scrollHeight);
     
     var currentLines = document.getElementsByClassName('consoleLine');
     var maxLines = 250;
@@ -25,9 +35,7 @@ function parseConsoleResponse(message)
         for (var i = 0; i < currentLines.length; i++)
         {
             $(currentLines[i]).remove();
-            
             amountRemoved++;
-            
             if (amountRemoved === amountToRemove)
             {
                 return false;
@@ -66,10 +74,10 @@ $('#consoleCheckbox').change(function() {
     
     if ($(this).is(":checked"))
     {
-        $("#consoleInput").attr("placeholder", "console command. e.g. gamemode 1 jayfella");
+        $("#consoleInput").attr("placeholder", "Console command. e.g. /gamemode 1 FabioZumbi12");
     }
     else
     {
-        $("#consoleInput").attr("placeholder", "player command. e.g. /gamemode 1");
+        $("#consoleInput").attr("placeholder", "Player command. e.g. /gamemode 1");
     }
 });
