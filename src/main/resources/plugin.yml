@@ -1,0 +1,6 @@
+name: WebOp
+main: me.jayfella.webop.WebOpPlugin
+version: ${project.version}
+author: jayfella & FabioZumbi12
+api-version: 1.13
+softdepend: [ "Essentials", "Vault" ]

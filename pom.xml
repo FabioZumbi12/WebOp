@@ -1,0 +1,180 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>WebOp</groupId>
+    <artifactId>WebOp</artifactId>
+    <version>4.1.0</version>
+    <name>WebOp</name>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+        </repository>
+
+        <repository>
+            <id>vault-repo</id>
+            <url>https://nexus.keyle.de/content/groups/public/</url>
+        </repository>
+
+        <!-- EssentialsX repo -->
+        <repository>
+            <id>EssentialsX-Vault</id>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
+
+        <repository>
+            <id>logblock</id>
+            <url>https://repo.md-5.net/content/repositories/public/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <!-- Spigot -->
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${mineVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${mineVersion}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
+
+        <!-- start of local repos -->
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.ess3</groupId>
+            <artifactId>EssentialsX</artifactId>
+            <version>2.16.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+
+        <!-- Start shade -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.28.v20200408</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.4.28.v20200408</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.websocket</groupId>
+            <artifactId>websocket-server</artifactId>
+            <version>9.4.28.v20200408</version>
+        </dependency>
+
+    </dependencies>
+
+    <properties>
+        <mineVersion>1.15.2-R0.1-SNAPSHOT</mineVersion>
+    </properties>
+
+    <build>
+        <finalName>${project.name}-NoShaded</finalName>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>src/main/resources/</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- Parse Version to plugin.yml -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <!-- Shade plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.eclipse.jetty:jetty-server</include>
+                                    <include>org.eclipse.jetty:jetty-webapp</include>
+                                    <include>org.eclipse.jetty.websocket:websocket-server</include>
+                                    <include>org.eclipse.jetty.websocket:websocket-servlet</include>
+                                    <include>org.eclipse.jetty.websocket:websocket-api</include>
+                                    <include>org.eclipse.jetty.websocket:websocket-common</include>
+                                    <include>org.eclipse.jetty:jetty-util</include>
+                                    <include>org.eclipse.jetty:jetty-http</include>
+                                    <include>org.eclipse.jetty:jetty-io</include>
+                                    <include>org.eclipse.jetty:jetty-servlet</include>
+                                    <include>org.eclipse.jetty:jetty-security</include>
+                                    <include>javax.servlet:javax.servlet-api</include>
+                                </includes>
+                            </artifactSet>
+                            <minimizeJar>true</minimizeJar>
+                            <outputFile>${project.basedir}/target/${project.name}-${project.version}.jar</outputFile>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

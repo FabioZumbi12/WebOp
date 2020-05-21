@@ -1,0 +1,1 @@
+Server DynMap >> http://localhost:8123

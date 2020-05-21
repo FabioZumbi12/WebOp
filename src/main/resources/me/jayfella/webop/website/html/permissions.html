@@ -1,0 +1,57 @@
+<!--
+
+    access
+    consoleView
+    consoleAsOp
+    
+-->
+
+<div class="container">
+
+    <div class="containerHead"><h2>WebOp Permissions</h2></div>
+
+    Add or remove people from the whitelist.
+    <br/><br/>
+
+    <div class="containerHead"><h2>Login</h2></div>
+
+    This list controls who is able to login to Webop.
+
+    <ol class="Selectable" id="accessWhitelist">
+        {accessWhitelist_users}
+    </ol>
+
+    <button class="btn-red" id="accessRemovePlayersButton">Remove Selected Players</button>
+    <br/><br/>
+    Add Players: <input class="manyPlayersSearchInput" id="accessAddPlayersInput" style="width: 75%" type="text">
+    <button class="btn-green" id="accessAddPlayersButton">Add Players</button>
+
+    <br/><br/>
+    <div class="containerHead"><h2>Console View</h2></div>
+
+    <ol class="Selectable" id="consoleViewWhitelist">
+        {consoleViewWhitelist_users}
+    </ol>
+
+    <button class="btn-red" id="consoleViewRemovePlayersButton">Remove Selected Players</button>
+    <br/><br/>
+    Add Players: <input class="manyPlayersSearchInput" id="consoleViewAddPlayersInput" style="width: 75%" type="text">
+    <button class="btn-green" id="consoleViewAddPlayersButton">Add Players</button>
+
+    <br/><br/>
+    <div class="containerHead"><h2>Console As OP</h2></div>
+
+    <ol class="Selectable" id="consoleAsOpWhitelist">
+        {consoleAsOpWhitelist_users}
+    </ol>
+
+    <button class="btn-red" id="consoleAsOpRemovePlayersButton">Remove Selected Players</button>
+    <br/><br/>
+    Add Players: <input class="manyPlayersSearchInput" id="consoleAsOpAddPlayersInput" style="width: 75%" type="text">
+    <button class="btn-green" id="consoleAsOpAddPlayersButton">Add Players</button>
+    <br/><br/>
+
+</div>
+
+<script src="jscript.php?file=jayfella.permissions.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.playersearchmany.js" type="text/javascript"></script>

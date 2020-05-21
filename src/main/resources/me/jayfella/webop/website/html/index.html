@@ -1,0 +1,178 @@
+<div class="container">
+    <div class="containerHead">
+        <h2>Server Details</h2>
+    </div>
+
+    <strong>Java Version:</strong> {java_version}<br/>
+    <strong>Bukkit Version:</strong> {bukkit_version}<br/>
+    <strong>Plugins ({plugin_count}):</strong> {plugin_list}<br/>
+    <strong>Worlds ({world_count}):</strong> {world_data}
+</div>
+
+<div class="container">
+    <div class="containerHead">
+        <h2>Server Utilization History</h2>
+    </div>
+
+    <div id='serverUtilizationGraph' style='height: 200px;'></div>
+    <!--<div id='chunksAndEntitiesGraph' style='width: 33%; margin-left: 66%; height: 150px; padding: 0px; position: relative;'></div>-->
+</div>
+
+<div class="container">
+    <div class="containerHead">
+        <h2>Players</h2>
+
+        <div style="float: right;">
+            <input class="playerSearchInput" placeholder="Search Player..." style="padding: 3px !important; margin-top: 6px; margin-right: 6px;"
+                   type="text">
+        </div>
+
+    </div>
+
+    <strong>Online Now:</strong> <span id="allPlayersOnlineNowCount">0</span>
+    &nbsp;&bullet;&nbsp;
+    <strong>Ever Played:</strong> <span id="allPlayersEverPlayedCount">0</span><br/>
+    <strong>Playing Now:</strong> <span id="allPlayersOnlineNow">0</span>
+</div>
+
+<div class="container">
+    <div class="containerHead">
+        <h2>Log Search</h2>
+        <div style="float: right; margin-top: 5px; margin-right: 5px;">
+            <img class="ajaxLoader" height="16" id="logSearchAjaxLoader" src="image.php?file=ajax.gif" style="visibility: hidden; vertical-align: middle;"
+                 width="16"/>
+            <input id="logSearchTermInput" placeholder="Search..." style="padding: 3px !important; vertical-align: middle;"
+                   type="text">
+            <input id="logSearchTimeFrame" placeholder="timeframe..."
+                   style="padding: 3px !important; vertical-align: middle; width: 75px;" title="Example: 6w5d4h3m2s<br/><br/>6 Week<br/>5 days<br/>4 hours<br/>3 minutes<br/>2 seconds"
+                   type="text">
+            <button class="btn-green" id="logSeachSubmitButton" style="vertical-align: middle;">Search</button>
+            <button class="btn-black" id="logSearchClearButton" style="vertical-align: middle;">Clear</button>
+        </div>
+
+    </div>
+
+    <div id="logSearchResult">
+        Use the log search to determine what happened at any time, and include a timeframe to narrow down the search.
+    </div>
+
+</div>
+
+{logblock_plugin}
+
+<div class="container">
+
+    <div class="containerHead">
+        <h2>Entity Search</h2>
+
+        <div style="float: right; margin-right: 10px; margin-top: 10px;">
+            <span class="ui-icon ui-icon-circle-triangle-s" id="entitiesExpand" style="cursor: pointer;"
+                  title="Toggle Visibility"></span>
+        </div>
+
+    </div>
+
+    <div id="entitiesControls" style="display: none;">
+
+        Find all chunks with more than
+        &nbsp;
+        <input id="entitiesInChunkSpinner" readonly
+               style="width: 35px; font-size: 11px; border: none !important; box-shadow: none !important; padding: 1px !important;"
+               type="text" value="10">
+        &nbsp;
+        <input id="entitiesInChunkEntities" placeholder="entity name(s)..." style="width: 300px;" type="text">
+
+        <button class="btn-green" id="submitEntitiesInChunkButtun">Search</button>
+        <button class="btn-black" id="entitiesInChunkEntitiesClearButton" style="float: right;">Clear</button>
+
+        <div id="findEntitiesResult"
+             style="font-family: Consolas,monaco,monospace; font-size: 11px;max-height: 300px; overflow-y: auto; overflow-x: hidden;"></div>
+    </div>
+
+</div>
+
+{server_profiler}
+
+<div class="container">
+
+    <div style="overflow: hidden;">
+
+        <div style="width: 450px; float: left;">
+            <div class="containerHead"><h2>Chat</h2></div>
+
+            <div id="chatOutput"
+                 style="font-size: 11px; overflow-x: hidden; overflow-y: auto; margin-top: -10px; height: 200px; width: 448px; border-width: thin 1px 1px; border-style: none solid solid; border-color: #F0F1F2;"></div>
+
+            <div style="width: 100%; margin-top: 5px;">
+                <input id="chatInput" placeholder="message..." style="width: 438px;" type="text">
+            </div>
+
+        </div>
+
+        <div style="width: 450px; float: right;">
+            <div class="containerHead"><h2>Messages</h2></div>
+
+            <div id="messageOutput"
+                 style="font-size: 11px; overflow-x: hidden; overflow-y: auto; margin-top: -10px; height: 200px; width: 448px; border-width: thin 1px 1px; border-style: none solid solid; border-color: #F0F1F2;"></div>
+
+            <div style="width: 100%; margin-top: 5px;">
+
+                <input id="messageInput" placeholder="message..." style="width: 280px;" type="text">
+
+                <select id="messagePriority" style="width: 100px; vertical-align: middle;">
+                    <option>Low</option>
+                    <option>Medium</option>
+                    <option>High</option>
+                </select>
+
+                <button class="btn-green" id="messageSubmitButton" style="width: 50px;">Create</button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="container">
+    <div class="containerHead">
+
+        <h2>Console</h2>
+
+        <div style="float: right;">
+            <div id="consoleHeightSlider" style="width: 150px; margin-top: 12px; margin-right: 10px;"></div>
+        </div>
+
+    </div>
+
+    <div id="consoleOutput"></div>
+
+    <div style="margin-top: 5px;">
+        <input id="consoleCheckbox" style="vertical-align: middle; position: absolute; margin-top: 7px; margin-left: 7px;" title="execute as Console (checked) or as Player (unchecked)"
+               type="checkbox">
+        <input id="consoleInput" placeholder="player command. e.g. /gamemode 1" style="width: 886px; padding-left: 25px;"
+               type="text">
+    </div>
+</div>
+
+<script src="jscript.php?file=jayfella.serverutilization.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.allplayersdata.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.playersearch.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.logsearch.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.console.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.chat.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.activitystatus.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.message.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.findentities.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.teleport.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.worlddata.js" type="text/javascript"></script>
+<script src="jscript.php?file=jayfella.essentials.js" type="text/javascript"></script>
+
+<script src="jscript.php?file=jayfella.websocket.js" type="text/javascript"></script>
+
+<div id='activityNofitication'
+     style='font-size: 11px; box-shadow: 0px 0px 7px #000000; display: none; position: fixed; top 10px; right: 10px; padding: 10px; border: 1px solid black; background: #ffffff; border-radius: 3px;'>
+    <span id="activityNofiticationName" style='color: red'></span>&nbsp;logged in.
+</div>
+
+{essentials_playerdata}
