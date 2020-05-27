@@ -164,19 +164,21 @@ public class SessionManager {
         final Cookie[] cookies = req.getCookies();
         String username = "";
         String session = "";
-        for (final Cookie cookie : cookies) {
-            final String name = cookie.getName();
-            switch (name) {
-                case "webop_user": {
-                    username = cookie.getValue();
-                    break;
-                }
-                case "webop_session": {
-                    session = cookie.getValue();
-                    break;
+        try {
+            for (final Cookie cookie : cookies) {
+                final String name = cookie.getName();
+                switch (name) {
+                    case "webop_user": {
+                        username = cookie.getValue();
+                        break;
+                    }
+                    case "webop_session": {
+                        session = cookie.getValue();
+                        break;
+                    }
                 }
             }
-        }
+        } catch (Exception ignored) {}
         return this.isValidUserAndSession(username, session);
     }
 

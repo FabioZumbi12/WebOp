@@ -9,6 +9,8 @@ import me.jayfella.webop.website.WebPage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class Image extends WebPage {
@@ -29,19 +31,19 @@ public class Image extends WebPage {
             this.setResponseCode(404);
             return new byte[0];
         }
-        final byte[] buffer = new byte[8192];
-        byte[] data;
-        try (final ByteArrayOutputStream bytes = new ByteArrayOutputStream()) {
-            int bytesRead;
-            while ((bytesRead = inp.read(buffer)) != -1) {
-                bytes.write(buffer, 0, bytesRead);
+
+        final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inp.read(buffer)) != -1) {
+                bytes.write(buffer, 0, len);
             }
-            data = bytes.toByteArray();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
             this.setResponseCode(404);
             return new byte[0];
         }
-        return data;
+        return bytes.toByteArray();
     }
 
     @Override
