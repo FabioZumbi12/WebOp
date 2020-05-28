@@ -47,19 +47,31 @@ public class Login extends WebPage {
             String username = req.getParameter("user");
             String password = req.getParameter("password");
             if (username == null || password == null) {
-                return "".getBytes();
+                return new byte[0];
             }
             username = URLDecoder.decode(username, "UTF-8");
             password = URLDecoder.decode(password, "UTF-8");
             minecraftName = PlayerValidator.isValidAccount(WebOpPlugin.PluginContext, username, password);
         } catch (UnsupportedEncodingException ex) {
-            return "Invalid username or password.".getBytes();
+            try {
+                resp.sendRedirect("badlogin.php?error=1");
+            } catch (IOException ignored) {
+            }
+            return new byte[0];
         }
         if (minecraftName.isEmpty()) {
-            return "Invalid username or password.".getBytes();
+            try {
+                resp.sendRedirect("badlogin.php?error=2");
+            } catch (IOException ignored) {
+            }
+            return new byte[0];
         }
         if (!WebOpPlugin.PluginContext.getSessionManager().isWhitelisted(minecraftName)) {
-            return "Username is not whitelisted.".getBytes();
+            try {
+                resp.sendRedirect("badlogin.php?error=3");
+            } catch (IOException ignored) {
+            }
+            return new byte[0];
         }
         if (WebOpPlugin.PluginContext.getSessionManager().isLoggedIn(minecraftName)) {
             WebOpPlugin.PluginContext.getSessionManager().logUserOut(minecraftName);

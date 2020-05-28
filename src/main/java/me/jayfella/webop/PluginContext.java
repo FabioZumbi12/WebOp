@@ -9,6 +9,8 @@ import me.jayfella.webop.Servlets.MyWebSocket;
 import me.jayfella.webop.core.ServerProfiler;
 import me.jayfella.webop.core.SessionManager;
 import me.jayfella.webop.datastore.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jetty.server.Server;
@@ -18,6 +20,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
+
+import java.util.Properties;
 
 public final class PluginContext {
     private final WebOpPlugin plugin;
@@ -60,6 +64,14 @@ public final class PluginContext {
                     factory.register(MyWebSocket.class);
                 }
             };
+
+            this.plugin.getLogger().info("WebOp started on http://localhost:" + this.pluginSettings.getHttpPort());
+            // Disable log
+            ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.Server")).setLevel(Level.OFF);
+            ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.session")).setLevel(Level.OFF);
+            ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.handler.ContextHandler")).setLevel(Level.OFF);
+            ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.AbstractConnector")).setLevel(Level.OFF);
+
             wsHandler.setServer(server);
             final ContextHandler wsContext = new ContextHandler();
             wsContext.setContextPath("/socket");
@@ -71,7 +83,9 @@ public final class PluginContext {
             try {
                 server.start();
                 server.join();
-            } catch (Exception ignored) {
+            } catch (Exception ex) {
+                this.plugin.getLogger().info("Failed to start WebOp server!");
+                ex.printStackTrace();
             }
         }).start();
     }
@@ -79,6 +93,7 @@ public final class PluginContext {
     public void stopServer() {
         try {
             server.stop();
+            this.plugin.getLogger().info("WebOp server stopped!");
         } catch (Exception e) {
             e.printStackTrace();
         }

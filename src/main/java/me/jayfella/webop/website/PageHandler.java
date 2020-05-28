@@ -43,8 +43,8 @@ public class PageHandler {
             case "logout.php": {
                 return new Logout();
             }
-            case "whitelist.php": {
-                return new Logout();
+            case "badlogin.php": {
+                return new BadLogin();
             }
             default: {
                 return new Error404();
