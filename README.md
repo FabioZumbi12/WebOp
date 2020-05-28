@@ -42,4 +42,4 @@ After installation is complete, any OP player can add and remove other players v
 
 ### Downloads
 BukkitDev: https://dev.bukkit.org/projects/webop-reborn  
-SpigotMC: ?
+SpigotMC: https://www.spigotmc.org/resources/webop-1-12-2-1-15.79410/
