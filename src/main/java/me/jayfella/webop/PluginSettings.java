@@ -15,6 +15,7 @@ public class PluginSettings {
 
     public PluginSettings(final PluginContext context) {
         context.getPlugin().saveDefaultConfig();
+        context.getPlugin().reloadConfig();
         this.fileConfig = context.getPlugin().getConfig();
         this.ipAddress = this.fileConfig.getString("settings.ip-address");
         this.httpPort = this.fileConfig.getInt("settings.http-port");

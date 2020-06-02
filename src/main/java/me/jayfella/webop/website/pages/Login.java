@@ -42,7 +42,7 @@ public class Login extends WebPage {
     }
 
     private byte[] attemptLogin(final HttpServletRequest req, final HttpServletResponse resp) {
-        String minecraftName = "";
+        String minecraftName;
         try {
             String username = req.getParameter("user");
             String password = req.getParameter("password");
