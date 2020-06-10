@@ -9,8 +9,6 @@ import me.jayfella.webop.website.WebPage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class Image extends WebPage {

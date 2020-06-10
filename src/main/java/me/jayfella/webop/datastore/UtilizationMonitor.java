@@ -6,7 +6,6 @@ package me.jayfella.webop.datastore;
 
 import com.sun.management.OperatingSystemMXBean;
 import me.jayfella.webop.PluginContext;
-import org.bukkit.plugin.Plugin;
 
 import java.lang.management.ManagementFactory;
 import java.math.BigDecimal;

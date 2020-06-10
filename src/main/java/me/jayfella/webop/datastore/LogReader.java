@@ -7,11 +7,9 @@ package me.jayfella.webop.datastore;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class LogReader {
     public String searchLog(final String searchTerm) {

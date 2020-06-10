@@ -5,16 +5,11 @@
 package me.jayfella.webop.website.pages;
 
 import me.jayfella.webop.WebOpPlugin;
-import me.jayfella.webop.core.PlayerValidator;
-import me.jayfella.webop.core.WebOpUser;
 import me.jayfella.webop.website.WebPage;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 public class Logout extends WebPage {
     public Logout() {

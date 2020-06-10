@@ -8,10 +8,6 @@ html, body {
     width: 940px;
     margin: 0px auto 50px;
     color: #333333;
-    /* padding: 6px;
-    border-radius: 3px;
-    background: url('image.php?opacity.png');
-    box-shadow: 0 1px 1px #606060, 0 1px 1px #2A2A2A inset; */
 }
 
 input[type="text"], input[type="password"] {
@@ -288,3 +284,18 @@ a:hover { color: #00BFFF; }
 .Selectable .ui-selected { background: #F39814; color: white; }
 .Selectable { list-style-type: none; margin: 0; padding: 0; width: 50%; }
 .Selectable li { margin: 1px; padding: 3px 10px; font-size: 11px; }
+
+.blink {
+  animation: blink-animation 0.5s steps(5, start) infinite;
+  -webkit-animation: blink-animation 0.5s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}

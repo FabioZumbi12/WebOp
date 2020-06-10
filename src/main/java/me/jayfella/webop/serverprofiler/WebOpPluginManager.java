@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.*;
 
 import java.io.Closeable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
