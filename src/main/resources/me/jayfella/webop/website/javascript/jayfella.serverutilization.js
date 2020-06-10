@@ -1,5 +1,5 @@
 var serverUtilizationChart;
-// var chunksAndEntitiesChart;
+var chunksAndEntitiesChart;
 
 $(document).ready(function() 
 {
@@ -7,7 +7,7 @@ $(document).ready(function()
     
     serverUtilizationChart = new Highcharts.Chart(
     {
-        chart: { renderTo: 'serverUtilizationGraph', animation: { duration: 1000 } },
+        chart: { renderTo: 'serverUtilizationGraph', animation: { duration: 2000 }, marginLeft: 20 },
         credits: { enabled: false },
         legend: { floating: true, align: 'left', verticalAlign: 'top', layout: 'vertical', backgroundColor: 'rgba(255, 255, 255, 0.8)', x: 15, y: 5, itemStyle: { fontSize: '10px' } },
         plotOptions: { spline: { marker: { enabled: false }, lineWidth: 2 } },
@@ -22,21 +22,21 @@ $(document).ready(function()
             { name: "Tick Rate", type: 'spline', data: [], color: '#ee4444', unit: 'TPS' }]
     });
 
-    /* chunksAndEntitiesChart = new Highcharts.Chart(
+    chunksAndEntitiesChart = new Highcharts.Chart(
     {
-        chart: { renderTo: 'chunksAndEntitiesGraph', animation: { duration: 1000 } },
+        chart: { renderTo: 'chunksAndEntitiesGraph', animation: { duration: 2000 } },
         credits: { enabled: false },
-        legend: { floating: true, align: 'left', verticalAlign: 'bottom', layout: 'vertical', backgroundColor: 'rgba(255, 255, 255, 0.8)', opacity: 0.5, x: 15, y: -10, itemStyle: { fontSize: '10px' } },
+        legend: { floating: true, align: 'left', verticalAlign: 'top', layout: 'vertical', backgroundColor: 'rgba(255, 255, 255, 0.8)', x: 15, y: 5, itemStyle: { fontSize: '10px' } },
         plotOptions: { area: { marker: { enabled: false }, lineWidth: 2 } },
         title: { text: ''},
         subTitle: { text: '' },
-        xAxis: { labels: { enabled: false } },
-        yAxis: { min: 0, title: { text: '' }, tickInterval: 1000, labels: { align: 'left' } },
+        xAxis: { labels: { enabled: true }, type: 'datetime' },
+        yAxis: { min: 0, title: { text: '' }, tickInterval: 20, labels: { align: 'left' } },
         tooltip: { formatter: function() { return this.y + this.series.options.unit; } },
         series:[
             { name: "Chunks", type: 'area', data: [], color: '#65553a', unit: ' chunks' },
             { name: "Entities", type: 'area', data: [], color: '#45653a', unit: ' entities' }]
-    }); */
+    });
     
 });
 
@@ -76,13 +76,13 @@ function parseServerUtilization(message)
         }
         else if (serverUtilizationRespData[0] === "CHUNKS")
         {
-            // var y = parseFloat(serverUtilizationRespData[1], 10);
-            // chunksAndEntitiesChart.series[0].addPoint([x, y], false, shiftUp);
+            var y = parseFloat(serverUtilizationRespData[1], 10);
+            chunksAndEntitiesChart.series[0].addPoint([x, y], false, shiftUp);
         }
         else if (serverUtilizationRespData[0] === "ENTITIES")
         {
-            // var y = parseFloat(serverUtilizationRespData[1], 10);
-            // chunksAndEntitiesChart.series[1].addPoint([x, y], true, shiftUp);
+            var y = parseFloat(serverUtilizationRespData[1], 10);
+            chunksAndEntitiesChart.series[1].addPoint([x, y], true, shiftUp);
         }
     }
     
