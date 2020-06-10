@@ -386,6 +386,9 @@ public class ConsoleMonitor extends SocketSubscription {
             output = output.replace("\r\n", "<br/>");
             output = output.replace("\r", "<br/>");
             output = output.replace("\n", "<br/>");
+            output = output.replace(">", "&gt;")
+                    .replace("<", "&lt;")
+                    .replace("\"", "&quot;");
             output = StringEscapeUtils.escapeJava(output);
             output = "[" + formatter.format(new Date(logEvent.getTimeMillis())) + " " + logEvent.getLevel() + "] " + output;
             output = parseMcColors(output);
