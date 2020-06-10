@@ -16,6 +16,7 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -77,7 +78,8 @@ public class MyWebSocket {
                             world.getEntities();
                             allEntitiesCount += world.getEntities().size();
                         }
-                        final String response = "case=serverUtilization;" + "CPU=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getCpuLoadPercent() + ";" + "MEM=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getUsedMemoryPercent() + ";" + "TPS=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getCurrentTPS() + ";" + "CHUNKS=" + allChunksCount + ";" + "ENTITIES=" + allEntitiesCount;
+                        String tps = new DecimalFormat("#.##").format(WebOpPlugin.PluginContext.getUtilizationMonitor().getCurrentTPS());
+                        final String response = "case=serverUtilization;" + "CPU=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getCpuLoadPercent() + ";" + "MEM=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getUsedMemoryPercent() + ";" + "TPS=" + tps + ";" + "CHUNKS=" + allChunksCount + ";" + "ENTITIES=" + allEntitiesCount;
                         MyWebSocket.this.sendMessage(session, response);
                     }
                 });

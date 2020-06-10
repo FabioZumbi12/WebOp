@@ -11,7 +11,6 @@ import me.jayfella.webop.core.SessionManager;
 import me.jayfella.webop.datastore.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.bukkit.World;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
@@ -47,7 +46,6 @@ public final class PluginContext {
         this.worldMonitor = new WorldMonitor(this);
         this.serverProfiler = new ServerProfiler(this);
         this.initJetty();
-        this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, new AutoSaver(this), 6000L, 6000L);
     }
 
     private void initJetty() {
@@ -138,20 +136,5 @@ public final class PluginContext {
 
     public ServerProfiler getServerProfiler() {
         return this.serverProfiler;
-    }
-
-    private class AutoSaver implements Runnable {
-        private final PluginContext context;
-
-        public AutoSaver(final PluginContext context) {
-            this.context = context;
-        }
-
-        @Override
-        public void run() {
-            for (final World world : this.context.getPlugin().getServer().getWorlds()) {
-                world.save();
-            }
-        }
     }
 }
