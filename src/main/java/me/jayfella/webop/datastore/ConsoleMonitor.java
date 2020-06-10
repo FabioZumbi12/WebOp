@@ -5,7 +5,6 @@
 package me.jayfella.webop.datastore;
 
 import me.jayfella.webop.PluginContext;
-import me.jayfella.webop.WebOpPlugin;
 import me.jayfella.webop.core.SocketSubscription;
 import me.jayfella.webop.core.WebOpUser;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -407,15 +406,17 @@ public class ConsoleMonitor extends SocketSubscription {
                         continue;
                     }
                     final String response = "case=consoleData;<span class='consoleLine'>" + output + "<br/></span>";
-                    WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), () -> {
-                        if (user.getWebSocketSession() == null || !user.getWebSocketSession().isOpen()) {
-                            return;
-                        }
-                        try {
-                            user.getWebSocketSession().getRemote().sendString(response);
-                        } catch (IOException ignored) {
-                        }
-                    });
+                    if (context.getPlugin().isEnabled()) {
+                        context.getPlugin().getServer().getScheduler().runTask(context.getPlugin(), () -> {
+                            if (user.getWebSocketSession() == null || !user.getWebSocketSession().isOpen()) {
+                                return;
+                            }
+                            try {
+                                user.getWebSocketSession().getRemote().sendString(response);
+                            } catch (IOException ignored) {
+                            }
+                        });
+                    }
                 }
             }
             return null;
