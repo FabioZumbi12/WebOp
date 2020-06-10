@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>WebOp</groupId>
     <artifactId>WebOp</artifactId>
-    <version>4.1.0</version>
+    <version>4.1.2</version>
     <name>WebOp</name>
 
     <repositories>

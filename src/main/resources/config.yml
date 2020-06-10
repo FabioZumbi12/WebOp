@@ -8,3 +8,4 @@ consoleView: []
 consoleOp: []
 
 allowed-login-players:
+  ExampleUser: 1234
