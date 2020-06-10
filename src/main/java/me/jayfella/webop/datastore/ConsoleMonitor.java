@@ -74,8 +74,8 @@ public class ConsoleMonitor extends SocketSubscription {
                 .replace("u00A7L", "<span style='font-weight: bold'>") // &l
                 .replace("u00A7o", "<span style='font-style: italic'>") // &o
                 .replace("u00A7O", "<span style='font-style: italic'>") // &o
-                .replace("u00A7k", "<span style='text-decoration: blink'>") // &k
-                .replace("u00A7K", "<span style='text-decoration: blink'>") // &k
+                .replace("u00A7k", "<span style='text-decoration: blink' class='blink'>") // &k
+                .replace("u00A7K", "<span style='text-decoration: blink' class='blink'>") // &k
                 .replace("u00A7m", "<span style='text-decoration: line-through'>") // &m
                 .replace("u00A7M", "<span style='text-decoration: line-through'>") // &m
                 .replace("u00A7n", "<span style='text-decoration: underline'>") // &n
