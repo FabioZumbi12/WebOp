@@ -380,11 +380,6 @@ public class ConsoleMonitor extends SocketSubscription {
                     output = output.replace("{" + i + "}", params[i].toString());
                 }
             }
-
-            output = output.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-            output = output.replace("\r\n", "<br/>");
-            output = output.replace("\r", "<br/>");
-            output = output.replace("\n", "<br/>");
             output = output.replace(">", "&gt;")
                     .replace("<", "&lt;")
                     .replace("\"", "&quot;");
@@ -393,6 +388,16 @@ public class ConsoleMonitor extends SocketSubscription {
             output = parseMcColors(output);
             output = output.trim();
 
+            // Debug
+            /* try {
+                File log = new File(context.getPlugin().getDataFolder(), "log.txt");
+                if (!log.exists()) log.createNewFile();
+                Files.write(log.toPath(), output.getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } */
+
+            // Remove credentials from console
             if (output.toLowerCase().contains("issued server command: /login") ||
                     output.toLowerCase().contains("issued server command: /register") ||
                     output.toLowerCase().contains("issued server command: /changepass")) return null;
@@ -407,15 +412,18 @@ public class ConsoleMonitor extends SocketSubscription {
                     }
                     final String response = "case=consoleData;<span class='consoleLine'>" + output + "<br/></span>";
                     if (context.getPlugin().isEnabled()) {
-                        context.getPlugin().getServer().getScheduler().runTask(context.getPlugin(), () -> {
-                            if (user.getWebSocketSession() == null || !user.getWebSocketSession().isOpen()) {
-                                return;
-                            }
-                            try {
-                                user.getWebSocketSession().getRemote().sendString(response);
-                            } catch (IOException ignored) {
-                            }
-                        });
+                        try {
+                            context.getPlugin().getServer().getScheduler().runTask(context.getPlugin(), () -> {
+                                if (user.getWebSocketSession() == null || !user.getWebSocketSession().isOpen()) {
+                                    return;
+                                }
+                                try {
+                                    user.getWebSocketSession().getRemote().sendString(response);
+                                } catch (IOException ignored) {
+                                }
+                            });
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
             }

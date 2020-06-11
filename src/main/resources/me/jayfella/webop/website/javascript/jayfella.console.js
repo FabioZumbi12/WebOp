@@ -22,26 +22,24 @@ function parseConsoleResponse(message)
             atBottom2 = (elem[0].scrollHeight - elem.scrollTop() === elem.outerHeight());
         }
     $("#consoleOutput").append(msg);
-    if (atBottom2) $(elem).scrollTop($(elem)[0].scrollHeight);
-    
-    var currentLines = document.getElementsByClassName('consoleLine');
-    var maxLines = 250;
-    
-    if (currentLines.length > maxLines)
-    {
-        var amountToRemove = currentLines.length - maxLines;
-        var amountRemoved = 0;
 
-        for (var i = 0; i < currentLines.length; i++)
-        {
-            $(currentLines[i]).remove();
-            amountRemoved++;
-            if (amountRemoved === amountToRemove)
-            {
-                return false;
-            }
-        };
+    if (atBottom2) $(elem).scrollTop($(elem)[0].scrollHeight);
+
+    var maxLines = 300;
+    var div = document.getElementById('consoleOutput');
+    while(getChildNodes(div).length > maxLines) {
+        div.childNodes[0].remove();
     }
+}
+
+function getChildNodes(node) {
+    var children = new Array();
+    for(var child in node.childNodes) {
+        if(node.childNodes[child].nodeType == 1) {
+            children.push(child);
+        }
+    }
+    return children;
 }
 
 $( "#consoleHeightSlider" ).slider(
@@ -66,7 +64,6 @@ $(document).on("keypress", "#consoleInput", function(e)
         var msg = socketValidationString() + "&case=consoleCommand&asConsole=" + asConsole + "&command=" + $(this).val().trim();
         
         webopSocket.send(msg);
-        $(this).val("");
     }
 });
 

@@ -30,13 +30,13 @@ public class WorldMonitor extends SocketSubscription {
 
     private class WorldEventMonitor implements Listener {
         private void updateSubscribers(final World world) {
-            for (final String player : WorldMonitor.this.getSubscribers()) {
+            for (final String player : getSubscribers()) {
                 final WebOpUser user = WebOpPlugin.PluginContext.getSessionManager().getUser(player);
                 if (user != null) {
                     if (user.getWebSocketSession() != null) {
                         if (user.getWebSocketSession().isOpen()) {
                             try {
-                                user.getWebSocketSession().getRemote().sendString("case=worldData;" + WorldMonitor.this.getWorldDetails(world));
+                                user.getWebSocketSession().getRemote().sendString("case=worldData;" + getWorldDetails(world));
                             } catch (IOException ignored) {
                             }
                         }
@@ -47,7 +47,7 @@ public class WorldMonitor extends SocketSubscription {
 
         @EventHandler
         public void onWeatherChange(final WeatherChangeEvent event) {
-            WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(WebOpPlugin.PluginContext.getPlugin(), () -> WorldEventMonitor.this.updateSubscribers(event.getWorld()), 20L);
+            WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(WebOpPlugin.PluginContext.getPlugin(), () -> updateSubscribers(event.getWorld()), 20L);
         }
 
         @EventHandler
@@ -61,7 +61,7 @@ public class WorldMonitor extends SocketSubscription {
             WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(WebOpPlugin.PluginContext.getPlugin(), new Runnable() {
                 @Override
                 public void run() {
-                    WorldEventMonitor.this.updateSubscribers(event.getPlayer().getWorld());
+                    updateSubscribers(event.getPlayer().getWorld());
                 }
             }, 20L);
         }
@@ -72,7 +72,7 @@ public class WorldMonitor extends SocketSubscription {
             WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(WebOpPlugin.PluginContext.getPlugin(), new Runnable() {
                 @Override
                 public void run() {
-                    WorldEventMonitor.this.updateSubscribers(world);
+                    updateSubscribers(world);
                 }
             }, 20L);
         }

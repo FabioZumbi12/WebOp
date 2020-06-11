@@ -93,7 +93,7 @@ public class PlayerMonitor extends SocketSubscription {
                 @Override
                 public void run() {
                     for (final WebOpUser user : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
-                        if (PlayerMonitor.this.isSubscriber(user.getName())) {
+                        if (isSubscriber(user.getName())) {
                             if (user.getWebSocketSession() == null) {
                                 continue;
                             }
@@ -101,7 +101,7 @@ public class PlayerMonitor extends SocketSubscription {
                                 continue;
                             }
                             try {
-                                user.getWebSocketSession().getRemote().sendString(PlayerMonitor.this.generatePlayerString());
+                                user.getWebSocketSession().getRemote().sendString(generatePlayerString());
                             } catch (IOException ex) {
                             }
                         }
@@ -116,7 +116,7 @@ public class PlayerMonitor extends SocketSubscription {
                 @Override
                 public void run() {
                     for (final WebOpUser user : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
-                        if (PlayerMonitor.this.isSubscriber(user.getName())) {
+                        if (isSubscriber(user.getName())) {
                             if (user.getWebSocketSession() == null) {
                                 continue;
                             }
@@ -124,7 +124,7 @@ public class PlayerMonitor extends SocketSubscription {
                                 continue;
                             }
                             try {
-                                user.getWebSocketSession().getRemote().sendString(PlayerMonitor.this.generatePlayerString());
+                                user.getWebSocketSession().getRemote().sendString(generatePlayerString());
                             } catch (IOException ex) {
                             }
                         }

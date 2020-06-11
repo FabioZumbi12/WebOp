@@ -73,9 +73,7 @@ public class MyWebSocket {
                         int allChunksCount = 0;
                         int allEntitiesCount = 0;
                         for (final World world : WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds()) {
-                            world.getLoadedChunks();
                             allChunksCount += world.getLoadedChunks().length;
-                            world.getEntities();
                             allEntitiesCount += world.getEntities().size();
                         }
                         String tps = new DecimalFormat("#.##").format(WebOpPlugin.PluginContext.getUtilizationMonitor().getCurrentTPS());
@@ -119,8 +117,7 @@ public class MyWebSocket {
                 if (action == null || action.isEmpty()) {
                     return;
                 }
-                final String s2 = action;
-                switch (s2) {
+                switch (action) {
                     case "create": {
                         final String socketMsg = map.get("msg");
                         final String socketPriority = map.get("priority");

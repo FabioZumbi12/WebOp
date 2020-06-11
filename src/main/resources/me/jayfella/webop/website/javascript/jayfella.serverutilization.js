@@ -17,8 +17,8 @@ $(document).ready(function()
         yAxis: { min: 0, max: 100, title: { text: '' }, tickInterval: 20, labels: { align: 'left' } },
         tooltip: { formatter: function() { return this.y + this.series.options.unit; } },
         series:[
-            { name: "Cpu Useage", type: 'spline', data: [], color: '#448844', unit: '%' },
-            { name: "Memory Useage", type: 'spline', data: [], color: '#ffa500', unit: '%' },
+            { name: "Cpu Usage", type: 'spline', data: [], color: '#448844', unit: '%' },
+            { name: "Memory Usage", type: 'spline', data: [], color: '#ffa500', unit: '%' },
             { name: "Tick Rate", type: 'spline', data: [], color: '#ee4444', unit: 'TPS' }]
     });
 
@@ -31,7 +31,7 @@ $(document).ready(function()
         title: { text: ''},
         subTitle: { text: '' },
         xAxis: { labels: { enabled: true }, type: 'datetime' },
-        yAxis: { min: 0, title: { text: '' }, tickInterval: 20, labels: { align: 'left' } },
+        yAxis: { min: 0, title: { text: '' }, tickInterval: 20, labels: { enabled: false } },
         tooltip: { formatter: function() { return this.y + this.series.options.unit; } },
         series:[
             { name: "Chunks", type: 'area', data: [], color: '#65553a', unit: ' chunks' },
