@@ -29,7 +29,7 @@ public class Permissions extends WebPage {
             }
             return new byte[0];
         }
-        String page = this.loadResource("me/jayfella/webop/website/html/permissions.html");
+        String page = this.loadResource("html", "permissions.html");
         page = page.replace("{accessWhitelist_users}", this.generateAccessListHtml());
         page = page.replace("{consoleViewWhitelist_users}", this.generateConsoleViewListHtml());
         page = page.replace("{consoleAsOpWhitelist_users}", this.generateConsoleUseListHtml());

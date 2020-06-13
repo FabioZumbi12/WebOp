@@ -17,14 +17,14 @@ public class Error404 extends WebPage {
 
     @Override
     public byte[] get(final HttpServletRequest req, final HttpServletResponse resp) {
-        String page = this.loadResource("me/jayfella/webop/website/html/404.html");
+        String page = this.loadResource("html", "404.html");
         page = this.addSiteTemplate(page, "[WebOp] Error", req);
         return page.getBytes();
     }
 
     @Override
     public byte[] post(final HttpServletRequest req, final HttpServletResponse resp) {
-        String page = this.loadResource("me/jayfella/webop/website/html/404.html");
+        String page = this.loadResource("html", "404.html");
         page = this.addSiteTemplate(page, "[WebOp] Error", req);
         return page.getBytes();
     }

@@ -31,7 +31,7 @@ public class Login extends WebPage {
             }
             return new byte[0];
         }
-        String page = this.loadResource("me/jayfella/webop/website/html/login.html");
+        String page = this.loadResource("html", "login.html");
         page = this.addSiteTemplate(page, "[WebOp] Console Login", req);
         return page.getBytes();
     }

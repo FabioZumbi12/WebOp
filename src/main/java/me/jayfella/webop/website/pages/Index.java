@@ -28,7 +28,7 @@ public class Index extends WebPage {
             }
             return new byte[0];
         }
-        String page = this.loadResource("me/jayfella/webop/website/html/index.html");
+        String page = this.loadResource("html", "index.html");
         page = this.addSiteTemplate(page, "[WebOp] Home Page", req);
         final int pluginCount = WebOpPlugin.PluginContext.getPlugin().getServer().getPluginManager().getPlugins().length;
         final StringBuilder pluginsSb = new StringBuilder();
@@ -41,10 +41,10 @@ public class Index extends WebPage {
         }
         final String arch = System.getProperty("os.arch").contains("64") ? "64bit" : "2bit";
         page = page.replace("{java_version}", System.getProperty("java.version") + " " + arch + " on " + System.getProperty("os.name")).replace("{bukkit_version}", WebOpPlugin.PluginContext.getPlugin().getServer().getVersion()).replace("{plugin_count}", Integer.toString(pluginCount)).replace("{plugin_list}", pluginsSb.toString());
-        page = ((WebOpPlugin.PluginContext.getPlugin().getServer().getPluginManager().getPlugin("LogBlock") != null) ? page.replace("{logblock_plugin}", this.loadResource("me/jayfella/webop/website/html/logblock.html")) : page.replace("{logblock_plugin}", ""));
+        page = ((WebOpPlugin.PluginContext.getPlugin().getServer().getPluginManager().getPlugin("LogBlock") != null) ? page.replace("{logblock_plugin}", this.loadResource("html", "logblock.html")) : page.replace("{logblock_plugin}", ""));
         final String httpUser = WebOpPlugin.PluginContext.getSessionManager().getUsername(req);
         final boolean isOp = WebOpPlugin.PluginContext.getPlugin().getServer().getOfflinePlayer(httpUser).isOp();
-        page = (isOp ? page.replace("{server_profiler}", this.loadResource("me/jayfella/webop/website/html/serverprofiler.html")) : page.replace("{server_profiler}", ""));
+        page = (isOp ? page.replace("{server_profiler}", this.loadResource("html", "serverprofiler.html")) : page.replace("{server_profiler}", ""));
         final StringBuilder worldsData = new StringBuilder();
         final World[] worlds = WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds().toArray(new World[WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds().size()]);
         for (int j = 0; j < worlds.length; ++j) {

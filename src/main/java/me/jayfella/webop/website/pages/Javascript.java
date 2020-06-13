@@ -22,7 +22,7 @@ public class Javascript extends WebPage {
             this.setResponseCode(404);
             return new byte[0];
         }
-        final String script = this.loadResource("me/jayfella/webop/website/javascript/" + requestedFile);
+        final String script = this.loadResource("javascript", requestedFile);
         if (!script.isEmpty()) {
             return script.getBytes();
         }

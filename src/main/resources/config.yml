@@ -1,5 +1,6 @@
 settings:
   http-port: 1337
+  html-theme: default
 
 whitelist: []
 

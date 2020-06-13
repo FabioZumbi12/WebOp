@@ -42,7 +42,7 @@ public abstract class WebPage {
     }
 
     public String addSiteTemplate(final String content, final String title, final HttpServletRequest req) {
-        String result = this.loadResource("me/jayfella/webop/website/html/overall_layout.html").replace("{page_body}", content).replace("{title}", title);
+        String result = this.loadResource("html", "overall_layout.html").replace("{page_body}", content).replace("{title}", title);
         if (WebOpPlugin.PluginContext.getSessionManager().isValidCookie(req)) {
             String username = "";
             for (final Cookie cookie : req.getCookies()) {
@@ -51,7 +51,7 @@ public abstract class WebPage {
                     break;
                 }
             }
-            result = result.replace("{main_menu}", this.loadResource("me/jayfella/webop/website/html/mainmenu.html"));
+            result = result.replace("{main_menu}", this.loadResource("html", "mainmenu.html"));
             result = result.replace("{username}", username);
             result = result.replace("{userlinks}", userLinks());
         } else {
@@ -60,10 +60,34 @@ public abstract class WebPage {
         return result;
     }
 
-    public String loadResource(final String path) {
+    private File getResourceFile(String type, final String resFile) {
+        // Check default file and save
+        File defaultFolder = new File(WebOpPlugin.PluginContext.getPlugin().getDataFolder(), File.separator + "themes" + File.separator + "default");
+        File defaultFile = new File(defaultFolder, File.separator + type + File.separator + resFile);
+        if (!defaultFile.exists()) {
+            WebOpPlugin.PluginContext.getPlugin().saveResource("themes/default/" + type + "/" + resFile, true);
+        }
+
+        // Check for theme file
+        File themePath = WebOpPlugin.PluginContext.getPluginSettings().getThemeFolder();
+        File file = new File(themePath, File.separator + type + File.separator + resFile);
+        if (file.exists()) {
+            defaultFile = file;
+        }
+        return defaultFile;
+    }
+
+    public InputStream loadImage(String imageFile) {
+        try {
+            return new FileInputStream(getResourceFile("images", imageFile));
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
+    public String loadResource(String type, final String pageFile) {
         StringBuilder output = new StringBuilder();
-        try (final InputStream inp = this.getClass().getClassLoader().getResourceAsStream(path);
-             final BufferedReader rd = new BufferedReader(new InputStreamReader(inp))) {
+        try (final InputStream inp = new FileInputStream(getResourceFile(type, pageFile)); final BufferedReader rd = new BufferedReader(new InputStreamReader(inp))) {
             String s;
             while (null != (s = rd.readLine())) {
                 output.append(s).append("\n");

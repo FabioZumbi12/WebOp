@@ -22,7 +22,7 @@ public class Stylesheet extends WebPage {
             this.setResponseCode(404);
             return new byte[0];
         }
-        final String stylesheet = this.loadResource("me/jayfella/webop/website/css/" + requestedFile);
+        final String stylesheet = this.loadResource("css", requestedFile);
         if (!stylesheet.isEmpty()) {
             return stylesheet.getBytes();
         }

@@ -53,7 +53,7 @@ function parseMessageResponse(message)
             msgMessage = decodeURIComponent(msgMessage);
             msgMessage = msgMessage.split("%20").join(" ");
             
-            var msgBox = "<div class='msgBox " + priorityClass +  "'><div class='msgDelete' title='permanently delete message'></div><span class='msgId'>" + msgId + "</span>Written by <span class='msgUser'>" + msgUser + "</span> on <span class='msgDate'>" + msgTime + "</span><br/><span class='msgMsg'>" + msgMessage + "</div>";
+            var msgBox = "<div class='msgBox " + priorityClass + "'><div class='msgDelete' title='permanently delete message'></div><span class='msgId'>" + msgId + "</span>Written by <span class='msgUser'>" + msgUser + "</span> on <span class='msgDate'>" + msgTime + "</span><br/><span class='msgMsg'>" + msgMessage + "</div>";
             
             $("#messageOutput").prepend(msgBox);
         }

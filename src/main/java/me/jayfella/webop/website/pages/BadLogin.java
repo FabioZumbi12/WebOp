@@ -18,7 +18,7 @@ public class BadLogin extends WebPage {
 
     @Override
     public byte[] get(final HttpServletRequest req, final HttpServletResponse resp) {
-        String page = this.loadResource("me/jayfella/webop/website/html/badlogin.html");
+        String page = this.loadResource("html", "badlogin.html");
         page = this.addSiteTemplate(page, "[WebOp] Bad Login", req);
         String response = req.getParameter("error");
         if (response == null) {

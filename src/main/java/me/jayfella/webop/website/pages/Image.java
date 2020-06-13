@@ -24,7 +24,7 @@ public class Image extends WebPage {
             this.setResponseCode(404);
             return new byte[0];
         }
-        final InputStream inp = this.getClass().getClassLoader().getResourceAsStream("me/jayfella/webop/website/images/" + requestedFile);
+        final InputStream inp = this.loadImage(requestedFile);
         if (inp == null) {
             this.setResponseCode(404);
             return new byte[0];

@@ -36,7 +36,7 @@ public class SessionManager {
     public SessionManager(final PluginContext context) {
         this.context = context;
         this.websocketSessions = new ArrayList<Session>();
-        this.users = new ArrayList<WebOpUser>();
+        this.users = new ArrayList<>();
         this.whitelist = this.populateWhitelist("whitelist");
         this.consoleViewPermission = this.populateWhitelist("consoleView");
         this.consoleUsePermission = this.populateWhitelist("consoleOp");
