@@ -1,15 +1,42 @@
 
+$("#serverWhitelist").selectable();
+
+$("#serverRemovePlayersButton").click(function()
+{
+    var playernames = "";
+    
+    $(".ui-selected", "#serverWhitelist").each(function()
+    {
+        playernames += $(this).text() + ",";
+    });
+    
+    $.post("permissions.php", { case: "serverWhitelist", action: "remove", players: playernames }, parseServerResponse);
+});
+
+$("#serverAddPlayersButton").click(function()
+{
+    var playernames = $("#serverAddPlayersInput").val();
+    $.post("permissions.php", { case: "serverWhitelist", action: "add", players: playernames }, parseServerResponse);
+});
+
+function parseServerResponse(resp)
+{
+    $("#serverWhitelist").html(resp);
+}
+
+
+
 $("#accessWhitelist").selectable();
 
 $("#accessRemovePlayersButton").click(function()
 {
     var playernames = "";
-    
+
     $(".ui-selected", "#accessWhitelist").each(function()
     {
         playernames += $(this).text() + ",";
     });
-    
+
     $.post("permissions.php", { case: "webopaccess", action: "remove", players: playernames }, parseAccessResponse);
 });
 
