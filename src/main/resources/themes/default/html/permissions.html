@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2020 - @FabioZumbi12
-  ~ Last Modified: 14/06/2020 00:14.
+  ~ Last Modified: 14/06/2020 02:01.
   ~
   ~ This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
   ~  damages arising from the use of this class.
@@ -29,15 +29,27 @@
     access
     consoleView
     consoleAsOp
-    
+
 -->
+
+<div class='container'>
+    <div class="containerHead"><h2>WebOp Permissions Handler</h2></div>
+    If a player has been opped, they are universally entitled to every permission, regardless of whether or not they are
+    on any of these lists.
+    If you are opped, you do not need to be on any of these lists.<br/><br/>
+    In the interest of security, only opped users are able to modify these lists.
+</div>
 
 <div class="container">
 
     <div class="containerHead"><h2>Server Whitelist</h2></div>
 
-    Add or remove people from the whitelist.
-
+    This whitelist determines which players are allowed to login to the gameserver whilst whitelist mode is enabled.
+    <br/>
+    <br/>
+    Whitelist mode is currently: <strong>{serverWhitelistBoolean}</strong><br/>
+    <br/>
+    <br/>
     <ol class="Selectable" id="serverWhitelist">
         {serverWhitelist_users}
     </ol>
@@ -48,10 +60,18 @@
     <button class="btn-green" id="serverAddPlayersButton">Add Players</button>
     <br/><br/>
 
-    <div class="containerHead"><h2>Login</h2></div>
+</div>
 
-    This list controls who is able to login to Webop.
+<div class="container">
 
+    <div class="containerHead"><h2>WebOp Login</h2></div>
+
+    This whitelist determines which players are entitled to login to the WebOp service.
+    Users that are not on this list are refused access to all functionality on this website.
+    If a user is removed from this list and is already logged in, their session becomes invalid and are thus unable to
+    use the WebOp service.
+    <br/>
+    <br/>
     <ol class="Selectable" id="accessWhitelist">
         {accessWhitelist_users}
     </ol>
@@ -62,10 +82,18 @@
     <button class="btn-green" id="accessAddPlayersButton">Add Players</button>
 
     <br/><br/>
+
+</div>
+
+<div class="container">
+
     <div class="containerHead"><h2>Console View</h2></div>
 
-    Players in this list can only see the console.
-
+    This whitelist determines which players are entitled to view the console in the WebOp service.
+    Users are additionally allowed to execute commands as themselves only (just like 'in-game'), and are denied the
+    ability to execute commands as the ConsoleCommandSender.
+    <br/>
+    <br/>
     <ol class="Selectable" id="consoleViewWhitelist">
         {consoleViewWhitelist_users}
     </ol>
@@ -76,10 +104,19 @@
     <button class="btn-green" id="consoleViewAddPlayersButton">Add Players</button>
 
     <br/><br/>
+
+</div>
+
+<div class="container">
+
     <div class="containerHead"><h2>Console As OP</h2></div>
 
-    Players in this list can run commands from console as OP.
-
+    This whitelist determines which players are entitled to issue commands in the WebOp console as the
+    ConsoleCommandSender.<br/>
+    <strong style='color: darkred;'>**WARNING** This entitlement effectively gives the player OP permissions and will be
+        able to issue ANY CONSOLE COMMAND from the WebOp console.</strong>
+    <br/>
+    <br/>
     <ol class="Selectable" id="consoleAsOpWhitelist">
         {consoleAsOpWhitelist_users}
     </ol>

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/06/2020 02:01.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -28,6 +28,7 @@ package me.jayfella.webop.core;
 
 import me.jayfella.webop.PluginContext;
 import me.jayfella.webop.WebOpPlugin;
+import org.bukkit.Bukkit;
 import org.eclipse.jetty.websocket.api.Session;
 
 import javax.servlet.http.Cookie;
@@ -95,6 +96,17 @@ public class SessionManager {
 
     public boolean isWhitelisted(final String username) {
         return WebOpPlugin.PluginContext.getPlugin().getServer().getOfflinePlayer(username).isOp() || this.whitelist.contains(username);
+    }
+
+    public void addToServerWhitelist(final String name) {
+        Bukkit.getOfflinePlayer(name).setWhitelisted(true);
+    }
+
+    public void removeFromServerWhitelist(final String name) {
+        if (this.isLoggedIn(name) && !this.isWhitelisted(name)) {
+            this.logUserOut(name);
+        }
+        Bukkit.getOfflinePlayer(name).setWhitelisted(false);
     }
 
     public void addToWhitelist(final String name) {

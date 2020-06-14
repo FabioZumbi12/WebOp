@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/06/2020 02:01.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -53,6 +53,7 @@ public final class PluginContext {
     private final EntityMonitor entityMonitor;
     private final WorldMonitor worldMonitor;
     private final ServerProfiler serverProfiler;
+    private final ServerPropertiesHandler serverPropertiesHandler;
     private Server server;
 
     public PluginContext(final WebOpPlugin plugin) {
@@ -67,6 +68,7 @@ public final class PluginContext {
         this.entityMonitor = new EntityMonitor();
         this.worldMonitor = new WorldMonitor(this);
         this.serverProfiler = new ServerProfiler(this);
+        this.serverPropertiesHandler = new ServerPropertiesHandler();
         this.initJetty();
     }
 
@@ -88,6 +90,7 @@ public final class PluginContext {
             ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.session")).setLevel(Level.OFF);
             ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.handler.ContextHandler")).setLevel(Level.OFF);
             ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.server.AbstractConnector")).setLevel(Level.OFF);
+            ((org.apache.logging.log4j.core.Logger) LogManager.getLogger("org.eclipse.jetty.util.log")).setLevel(Level.OFF);
 
             wsHandler.setServer(server);
             final ContextHandler wsContext = new ContextHandler();
@@ -158,5 +161,9 @@ public final class PluginContext {
 
     public ServerProfiler getServerProfiler() {
         return this.serverProfiler;
+    }
+
+    public final ServerPropertiesHandler getServerPropertiesHandler() {
+        return this.serverPropertiesHandler;
     }
 }

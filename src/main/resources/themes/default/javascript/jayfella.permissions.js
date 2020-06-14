@@ -1,3 +1,32 @@
+$(document).on('click', '#whitelistModeButton', function (e)
+{
+    var thisButton = this;
+
+    $(thisButton).attr('disabled','disabled');
+    var mode = ($(thisButton).attr("class") === "btn-green") ? "enable" : "disable";
+
+    $.post("permissions.php", { case: "toggleWhitelistMode", mode: mode }, function(value)
+    {
+        switch (value)
+        {
+            case "true":
+            {
+                $(thisButton).attr("class","btn-red");
+                $(thisButton).html("ON - Only whitelisted players can join");
+                break;
+            }
+            case "false":
+            {
+                $(thisButton).attr("class","btn-green");
+                $(thisButton).html("OFF - Anybody can join");
+                break;
+            }
+        }
+        $(thisButton).removeAttr('disabled');
+    });
+});
+
+
 
 $("#serverWhitelist").selectable();
 

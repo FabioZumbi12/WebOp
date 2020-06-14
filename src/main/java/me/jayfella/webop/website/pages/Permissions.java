@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/06/2020 02:01.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Permissions extends WebPage {
     public Permissions() {
@@ -54,6 +55,7 @@ public class Permissions extends WebPage {
             return new byte[0];
         }
         String page = this.loadResource("html", "permissions.html");
+        page = page.replace("{serverWhitelistBoolean}", this.generateWhitelistToggleHtml());
         page = page.replace("{serverWhitelist_users}", this.generateServerWListHtml());
         page = page.replace("{accessWhitelist_users}", this.generateAccessListHtml());
         page = page.replace("{consoleViewWhitelist_users}", this.generateConsoleViewListHtml());
@@ -76,6 +78,23 @@ public class Permissions extends WebPage {
             return "insufficient data".getBytes();
         }
         switch (caseParam) {
+            case "toggleWhitelistMode": {
+                final String postMode = req.getParameter("mode");
+                if (postMode == null || postMode.isEmpty()) {
+                    return "insufficient data".getBytes();
+                }
+                boolean whitelistMode = postMode.equals("enable");
+                try {
+                    Bukkit.getScheduler().callSyncMethod(WebOpPlugin.PluginContext.getPlugin(), () -> {
+                        WebOpPlugin.PluginContext.getPlugin().getServer().setWhitelist(whitelistMode);
+                        WebOpPlugin.PluginContext.getServerPropertiesHandler().setValue("white-list", String.valueOf(whitelistMode).toLowerCase());
+                        return null;
+                    }).get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+                return String.valueOf(whitelistMode).getBytes();
+            }
             case "serverWhitelist": {
                 final String postAction = req.getParameter("action");
                 final String postPlayers = req.getParameter("players");
@@ -95,7 +114,7 @@ public class Permissions extends WebPage {
                         return new byte[0];
                     }
                 }
-                return this.generateAccessListHtml().getBytes();
+                return this.generateServerWListHtml().getBytes();
             }
             case "webopaccess": {
                 final String postAction = req.getParameter("action");
@@ -176,6 +195,16 @@ public class Permissions extends WebPage {
             }
         }
         switch (type) {
+            case ServerWhitelist: {
+                for (final String player : playersToProcess) {
+                    if (add) {
+                        WebOpPlugin.PluginContext.getSessionManager().addToServerWhitelist(player);
+                    } else {
+                        WebOpPlugin.PluginContext.getSessionManager().removeFromServerWhitelist(player);
+                    }
+                }
+                break;
+            }
             case Whitelist: {
                 for (final String player : playersToProcess) {
                     if (add) {
@@ -207,6 +236,12 @@ public class Permissions extends WebPage {
                 break;
             }
         }
+    }
+
+    private String generateWhitelistToggleHtml() {
+        return WebOpPlugin.PluginContext.getPlugin().getServer().hasWhitelist()
+                ? "<button id='whitelistModeButton' class='btn-red'>ON - Only whitelisted players can join</button>"
+                : "<button id='whitelistModeButton' class='btn-green'>OFF - Anybody can join</button>";
     }
 
     private String generateServerWListHtml() {

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/06/2020 01:53.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -66,7 +66,7 @@ public class Index extends WebPage {
         page = ((WebOpPlugin.PluginContext.getPlugin().getServer().getPluginManager().getPlugin("LogBlock") != null) ? page.replace("{logblock_plugin}", this.loadResource("html", "logblock.html")) : page.replace("{logblock_plugin}", ""));
         final String httpUser = WebOpPlugin.PluginContext.getSessionManager().getUsername(req);
         final boolean isOp = WebOpPlugin.PluginContext.getPlugin().getServer().getOfflinePlayer(httpUser).isOp();
-        page = (isOp ? page.replace("{server_profiler}", this.loadResource("html", "serverprofiler.html")) : page.replace("{server_profiler}", ""));
+        page = (isOp ? page.replace("{server_profiler}", /*this.loadResource("html", "serverprofiler.html")*/ "") : page.replace("{server_profiler}", ""));
         final StringBuilder worldsData = new StringBuilder();
         final World[] worlds = WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds().toArray(new World[WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds().size()]);
         for (int j = 0; j < worlds.length; ++j) {
