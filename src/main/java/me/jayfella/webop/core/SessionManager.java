@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:07.
+ * Last Modified: 14/06/2020 00:14.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -23,10 +23,6 @@
  * classe original.
  * 3 - Este aviso não pode ser removido ou alterado de qualquer distribuição de origem.
  */
-
-//
-// Decompiled by Procyon v0.5.36
-//
 
 package me.jayfella.webop.core;
 
@@ -202,7 +198,8 @@ public class SessionManager {
                     }
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return this.isValidUserAndSession(username, session);
     }
 
