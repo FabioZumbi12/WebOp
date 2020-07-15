@@ -1,6 +1,6 @@
 <!--
   ~ Copyright (c) 2020 - @FabioZumbi12
-  ~ Last Modified: 14/06/2020 00:14.
+  ~ Last Modified: 14/06/2020 02:56.
   ~
   ~ This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
   ~  damages arising from the use of this class.
@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>WebOp</groupId>
     <artifactId>WebOp</artifactId>
-    <version>4.2.0</version>
+    <version>4.3.0</version>
     <name>WebOp</name>
 
     <repositories>

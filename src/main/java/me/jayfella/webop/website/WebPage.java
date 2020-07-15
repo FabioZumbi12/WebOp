@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/07/2020 23:56.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -37,6 +37,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 public abstract class WebPage {
@@ -82,12 +83,62 @@ public abstract class WebPage {
         return result;
     }
 
+    private static boolean isSame(InputStream input1, InputStream input2) throws IOException {
+        boolean error = false;
+        try {
+            byte[] buffer1 = new byte[1024];
+            byte[] buffer2 = new byte[1024];
+            try {
+                int numRead1 = 0;
+                int numRead2 = 0;
+                while (true) {
+                    numRead1 = input1.read(buffer1);
+                    numRead2 = input2.read(buffer2);
+                    if (numRead1 > -1) {
+                        if (numRead2 != numRead1) return false;
+                        // Otherwise same number of bytes read
+                        if (!Arrays.equals(buffer1, buffer2)) return false;
+                        // Otherwise same bytes read, so continue ...
+                    } else {
+                        // Nothing more in stream 1 ...
+                        return numRead2 < 0;
+                    }
+                }
+            } finally {
+                input1.close();
+            }
+        } catch (IOException e) {
+            error = true; // this error should be thrown, even if there is an error closing stream 2
+            throw e;
+        } catch (RuntimeException e) {
+            error = true; // this error should be thrown, even if there is an error closing stream 2
+            throw e;
+        } finally {
+            try {
+                input2.close();
+            } catch (IOException e) {
+                if (!error) throw e;
+            }
+        }
+    }
+
     private File getResourceFile(String type, final String resFile) {
         // Check default file and save
         File defaultFolder = new File(WebOpPlugin.PluginContext.getPlugin().getDataFolder(), File.separator + "themes" + File.separator + "default");
         File defaultFile = new File(defaultFolder, File.separator + type + File.separator + resFile);
         if (!defaultFile.exists()) {
             WebOpPlugin.PluginContext.getPlugin().saveResource("themes/default/" + type + "/" + resFile, true);
+        }
+
+        // Detect changes on default theme and save
+        InputStream resInput = WebOpPlugin.PluginContext.getPlugin().getResource("themes/default/" + type + "/" + resFile);
+        try {
+            if (!isSame(new FileInputStream(defaultFile), resInput)) {
+                WebOpPlugin.PluginContext.getPlugin().saveResource("themes/default/" + type + "/" + resFile, true);
+                WebOpPlugin.PluginContext.getPlugin().getLogger().info("Updated default theme file: " + type + "/" + resFile);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // Check for theme file

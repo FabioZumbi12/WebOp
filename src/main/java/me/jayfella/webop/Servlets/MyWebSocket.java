@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 - @FabioZumbi12
- * Last Modified: 14/06/2020 00:14.
+ * Last Modified: 14/07/2020 23:54.
  *
  * This class is provided 'as-is', without any express or implied warranty. In no event will the authors be held liable for any
  *  damages arising from the use of this class.
@@ -30,6 +30,7 @@ import me.jayfella.webop.WebOpPlugin;
 import me.jayfella.webop.core.MessagePriority;
 import me.jayfella.webop.core.WebOpMessage;
 import me.jayfella.webop.core.WebOpUser;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -52,7 +53,10 @@ public class MyWebSocket {
             return;
         }
         try {
-            session.getRemote().sendString(message);
+            Bukkit.getScheduler().callSyncMethod(WebOpPlugin.PluginContext.getPlugin(), () -> {
+                session.getRemote().sendString(message);
+                return null;
+            });
         } catch (Exception ex) {
             WebOpPlugin.PluginContext.getPlugin().getLogger().log(Level.WARNING, "WebSocket Error:", ex);
         }
@@ -87,195 +91,182 @@ public class MyWebSocket {
         String replace = message.replace("&webop_user=" + socketUser, "").replace("webop_user=" + socketUser, "");
         final String replace1 = replace.replace("&webop_session=" + socketSession, "").replace("webop_session=" + socketSession, "");
         String replace2 = replace1.replace("&case=" + socketCase, "").replace("case=" + socketCase, "");
-        switch (socketCase) {
-            case "serverUtilization": {
-                WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), new Runnable() {
-                    @Override
-                    public void run() {
-                        int allChunksCount = 0;
-                        int allEntitiesCount = 0;
-                        for (final World world : WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds()) {
-                            allChunksCount += world.getLoadedChunks().length;
-                            allEntitiesCount += world.getEntities().size();
-                        }
-                        String tps = new DecimalFormat("#.##").format(WebOpPlugin.PluginContext.getUtilizationMonitor().getCurrentTPS());
-                        final String response = "case=serverUtilization;" + "CPU=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getCpuLoadPercent() + ";" + "MEM=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getUsedMemoryPercent() + ";" + "TPS=" + tps + ";" + "CHUNKS=" + allChunksCount + ";" + "ENTITIES=" + allEntitiesCount;
-                        MyWebSocket.this.sendMessage(session, response);
+
+        Bukkit.getScheduler().runTaskAsynchronously(WebOpPlugin.PluginContext.getPlugin(), () -> {
+            switch (socketCase) {
+                case "serverUtilization": {
+                    int allChunksCount = 0;
+                    int allEntitiesCount = 0;
+                    for (final World world : WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds()) {
+                        allChunksCount += world.getLoadedChunks().length;
+                        allEntitiesCount += world.getEntities().size();
                     }
-                });
-                break;
-            }
-            case "subscribeAllPlayersData": {
-                WebOpPlugin.PluginContext.getPlayerMonitor().addSubscriber(socketUser);
-                this.sendMessage(session, WebOpPlugin.PluginContext.getPlayerMonitor().generatePlayerString());
-                break;
-            }
-            case "subscribeConsole": {
-                if (!WebOpPlugin.PluginContext.getSessionManager().canViewConsole(socketUser)) {
-                    return;
+                    String tps = new DecimalFormat("#.##").format(WebOpPlugin.PluginContext.getUtilizationMonitor().getCurrentTPS());
+                    final String response = "case=serverUtilization;" + "CPU=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getCpuLoadPercent() + ";" + "MEM=" + WebOpPlugin.PluginContext.getUtilizationMonitor().getUsedMemoryPercent() + ";" + "TPS=" + tps + ";" + "CHUNKS=" + allChunksCount + ";" + "ENTITIES=" + allEntitiesCount;
+                    this.sendMessage(session, response);
+                    break;
                 }
-                WebOpPlugin.PluginContext.getConsoleMonitor().addSubscriber(socketUser);
-                break;
-            }
-            case "chat": {
-                String sanitizedMsg = replace2.replace("&msg=", "").replace("msg=", "").replace(" ", "%20");
-                if (sanitizedMsg.length() > 256) {
-                    sanitizedMsg = sanitizedMsg.substring(0, 255);
+                case "subscribeAllPlayersData": {
+                    WebOpPlugin.PluginContext.getPlayerMonitor().addSubscriber(socketUser);
+                    this.sendMessage(session, WebOpPlugin.PluginContext.getPlayerMonitor().generatePlayerString());
+                    break;
                 }
-                final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-                final String time = df.format(new Date(System.currentTimeMillis()));
-                try {
-                    sanitizedMsg = URLEncoder.encode(sanitizedMsg, "UTF-8");
-                } catch (IOException ignored) {
-                }
-                final String response = "case=chatMessage;user=" + socketUser + ";time=" + time + ";msg=" + sanitizedMsg;
-                for (final WebOpUser user2 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
-                    user2.sendSocketMessage(response);
-                }
-                break;
-            }
-            case "message": {
-                final String action = map.get("action");
-                if (action == null || action.isEmpty()) {
-                    return;
-                }
-                switch (action) {
-                    case "create": {
-                        final String socketMsg = map.get("msg");
-                        final String socketPriority = map.get("priority");
-                        if (socketMsg == null || socketMsg.isEmpty()) {
-                            return;
-                        }
-                        if (socketPriority == null || socketPriority.isEmpty()) {
-                            return;
-                        }
-                        String sanitizedMsg2 = replace2.replace("&action=" + action, "").replace("action=" + action, "").replace("&priority=" + socketPriority, "").replace("priority=" + socketPriority, "").replace("&msg=", "").replace("msg=", "").replace(" ", "%20");
-                        try {
-                            sanitizedMsg2 = URLEncoder.encode(sanitizedMsg2, "UTF-8");
-                        } catch (IOException ignored) {
-                        }
-                        final MessagePriority msgPriority = MessagePriority.valueOf(socketPriority);
-                        final WebOpMessage newMessage = WebOpPlugin.PluginContext.getMessageHandler().createMessage(socketUser, msgPriority, sanitizedMsg2);
-                        final String response2 = "case=message;action=new;" + WebOpPlugin.PluginContext.getMessageHandler().createWebSocketString(newMessage);
-                        for (final WebOpUser user3 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
-                            user3.sendSocketMessage(response2);
-                        }
-                        break;
+                case "subscribeConsole": {
+                    if (!WebOpPlugin.PluginContext.getSessionManager().canViewConsole(socketUser)) {
+                        return;
                     }
-                    case "delete": {
-                        final String socketMsgId = map.get("msgId");
-                        if (socketMsgId == null || socketMsgId.isEmpty()) {
-                            return;
-                        }
-                        final int msgId = Integer.parseInt(socketMsgId);
-                        WebOpPlugin.PluginContext.getMessageHandler().deleteMessage(msgId);
-                        final String response3 = "case=message;action=delete;msgId=" + msgId;
-                        for (final WebOpUser user4 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
-                            user4.sendSocketMessage(response3);
-                        }
-                        break;
+                    WebOpPlugin.PluginContext.getConsoleMonitor().addSubscriber(socketUser);
+                    break;
+                }
+                case "chat": {
+                    String sanitizedMsg = replace2.replace("&msg=", "").replace("msg=", "").replace(" ", "%20");
+                    if (sanitizedMsg.length() > 256) {
+                        sanitizedMsg = sanitizedMsg.substring(0, 255);
                     }
-                    case "retrieve": {
-                        for (final WebOpMessage msg : WebOpPlugin.PluginContext.getMessageHandler().getMessages()) {
-                            final String response3 = "case=message;action=new;" + WebOpPlugin.PluginContext.getMessageHandler().createWebSocketString(msg);
-                            this.sendMessage(session, response3);
-                        }
-                        break;
+                    final SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+                    final String time = df.format(new Date(System.currentTimeMillis()));
+                    try {
+                        sanitizedMsg = URLEncoder.encode(sanitizedMsg, "UTF-8");
+                    } catch (IOException ignored) {
                     }
+                    final String response = "case=chatMessage;user=" + socketUser + ";time=" + time + ";msg=" + sanitizedMsg;
+                    for (final WebOpUser user2 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
+                        user2.sendSocketMessage(response);
+                    }
+                    break;
                 }
-                break;
-            }
-            case "consoleCommand": {
-                final String socketCommand = map.get("command");
-                final String socketAsConsole = map.get("asConsole");
-                if (socketCommand == null || socketCommand.isEmpty()) {
-                    return;
-                }
-                if (socketAsConsole == null || socketAsConsole.isEmpty()) {
-                    return;
-                }
-                final boolean asConsole = Boolean.parseBoolean(socketAsConsole);
-                final String sanitizedCommand = replace2.replace("&asConsole=" + socketAsConsole, "").replace("asConsole=" + socketAsConsole, "").replace("&command=", "").replace("command=", "");
-                WebOpPlugin.PluginContext.getConsoleMonitor().executeCommand(sanitizedCommand, asConsole, socketUser);
-                break;
-            }
-            case "teleport": {
-                final String socketAction = map.get("action");
-                if (socketAction == null || socketAction.isEmpty()) {
-                    return;
-                }
-                switch (socketAction) {
-                    case "player": {
-                        final String socketToPlayer = map.get("to");
-                        if (socketToPlayer == null || socketToPlayer.isEmpty()) {
-                            return;
-                        }
-                        final Player playerToTeleport = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketUser);
-                        final Player playerDestination = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketToPlayer);
-                        if (playerToTeleport == null || playerDestination == null) {
-                            return;
-                        }
-                        WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                playerToTeleport.teleport(playerDestination.getLocation());
+                case "message": {
+                    final String action = map.get("action");
+                    if (action == null || action.isEmpty()) {
+                        return;
+                    }
+                    switch (action) {
+                        case "create": {
+                            final String socketMsg = map.get("msg");
+                            final String socketPriority = map.get("priority");
+                            if (socketMsg == null || socketMsg.isEmpty()) {
+                                return;
                             }
-                        });
-                        break;
-                    }
-                    case "coord": {
-                        final String socketX = map.get("x");
-                        final String socketY = map.get("y");
-                        final String socketZ = map.get("z");
-                        final String socketW = map.get("w");
-                        if (socketX == null || socketX.isEmpty() || socketY == null || socketY.isEmpty() || socketZ == null || socketZ.isEmpty() || socketW == null || socketW.isEmpty()) {
-                            return;
-                        }
-                        final Player playerToTeleport2 = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketUser);
-                        if (playerToTeleport2 == null) {
-                            return;
-                        }
-                        int x;
-                        int y;
-                        int z;
-                        try {
-                            x = Integer.parseInt(socketX);
-                            y = Integer.parseInt(socketY);
-                            z = Integer.parseInt(socketZ);
-                        } catch (NumberFormatException ex) {
-                            return;
-                        }
-                        final World world = WebOpPlugin.PluginContext.getPlugin().getServer().getWorld(socketW);
-                        if (world == null) {
-                            return;
-                        }
-                        final Location teleportLocation = new Location(world, x, y, z);
-                        WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), new Runnable() {
-                            @Override
-                            public void run() {
-                                playerToTeleport2.teleport(teleportLocation);
+                            if (socketPriority == null || socketPriority.isEmpty()) {
+                                return;
                             }
-                        });
-                        break;
+                            String sanitizedMsg2 = replace2.replace("&action=" + action, "").replace("action=" + action, "").replace("&priority=" + socketPriority, "").replace("priority=" + socketPriority, "").replace("&msg=", "").replace("msg=", "").replace(" ", "%20");
+                            try {
+                                sanitizedMsg2 = URLEncoder.encode(sanitizedMsg2, "UTF-8");
+                            } catch (IOException ignored) {
+                            }
+                            final MessagePriority msgPriority = MessagePriority.valueOf(socketPriority);
+                            final WebOpMessage newMessage = WebOpPlugin.PluginContext.getMessageHandler().createMessage(socketUser, msgPriority, sanitizedMsg2);
+                            final String response2 = "case=message;action=new;" + WebOpPlugin.PluginContext.getMessageHandler().createWebSocketString(newMessage);
+                            for (final WebOpUser user3 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
+                                user3.sendSocketMessage(response2);
+                            }
+                            break;
+                        }
+                        case "delete": {
+                            final String socketMsgId = map.get("msgId");
+                            if (socketMsgId == null || socketMsgId.isEmpty()) {
+                                return;
+                            }
+                            final int msgId = Integer.parseInt(socketMsgId);
+                            WebOpPlugin.PluginContext.getMessageHandler().deleteMessage(msgId);
+                            final String response3 = "case=message;action=delete;msgId=" + msgId;
+                            for (final WebOpUser user4 : WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers()) {
+                                user4.sendSocketMessage(response3);
+                            }
+                            break;
+                        }
+                        case "retrieve": {
+                            for (final WebOpMessage msg : WebOpPlugin.PluginContext.getMessageHandler().getMessages()) {
+                                final String response3 = "case=message;action=new;" + WebOpPlugin.PluginContext.getMessageHandler().createWebSocketString(msg);
+                                this.sendMessage(session, response3);
+                            }
+                            break;
+                        }
                     }
+                    break;
                 }
-                break;
-            }
-            case "subscribeWorldData": {
-                WebOpPlugin.PluginContext.getWorldMonitor().addSubscriber(socketUser);
-                for (final World world2 : WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds()) {
-                    final String response4 = "case=worldData;" + WebOpPlugin.PluginContext.getWorldMonitor().getWorldDetails(world2);
-                    this.sendMessage(session, response4);
+                case "consoleCommand": {
+                    final String socketCommand = map.get("command");
+                    final String socketAsConsole = map.get("asConsole");
+                    if (socketCommand == null || socketCommand.isEmpty()) {
+                        return;
+                    }
+                    if (socketAsConsole == null || socketAsConsole.isEmpty()) {
+                        return;
+                    }
+                    final boolean asConsole = Boolean.parseBoolean(socketAsConsole);
+                    final String sanitizedCommand = replace2.replace("&asConsole=" + socketAsConsole, "").replace("asConsole=" + socketAsConsole, "").replace("&command=", "").replace("command=", "");
+                    WebOpPlugin.PluginContext.getConsoleMonitor().executeCommand(sanitizedCommand, asConsole, socketUser);
+                    break;
                 }
-                break;
+                case "teleport": {
+                    final String socketAction = map.get("action");
+                    if (socketAction == null || socketAction.isEmpty()) {
+                        return;
+                    }
+                    switch (socketAction) {
+                        case "player": {
+                            final String socketToPlayer = map.get("to");
+                            if (socketToPlayer == null || socketToPlayer.isEmpty()) {
+                                return;
+                            }
+                            final Player playerToTeleport = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketUser);
+                            final Player playerDestination = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketToPlayer);
+                            if (playerToTeleport == null || playerDestination == null) {
+                                return;
+                            }
+                            WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), () -> playerToTeleport.teleport(playerDestination.getLocation()));
+                            break;
+                        }
+                        case "coord": {
+                            final String socketX = map.get("x");
+                            final String socketY = map.get("y");
+                            final String socketZ = map.get("z");
+                            final String socketW = map.get("w");
+                            if (socketX == null || socketX.isEmpty() || socketY == null || socketY.isEmpty() || socketZ == null || socketZ.isEmpty() || socketW == null || socketW.isEmpty()) {
+                                return;
+                            }
+                            final Player playerToTeleport2 = WebOpPlugin.PluginContext.getPlugin().getServer().getPlayer(socketUser);
+                            if (playerToTeleport2 == null) {
+                                return;
+                            }
+                            int x;
+                            int y;
+                            int z;
+                            try {
+                                x = Integer.parseInt(socketX);
+                                y = Integer.parseInt(socketY);
+                                z = Integer.parseInt(socketZ);
+                            } catch (NumberFormatException ex) {
+                                return;
+                            }
+                            final World world = WebOpPlugin.PluginContext.getPlugin().getServer().getWorld(socketW);
+                            if (world == null) {
+                                return;
+                            }
+                            final Location teleportLocation = new Location(world, x, y, z);
+                            WebOpPlugin.PluginContext.getPlugin().getServer().getScheduler().runTask(WebOpPlugin.PluginContext.getPlugin(), () -> playerToTeleport2.teleport(teleportLocation));
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case "subscribeWorldData": {
+                    WebOpPlugin.PluginContext.getWorldMonitor().addSubscriber(socketUser);
+                    for (final World world2 : WebOpPlugin.PluginContext.getPlugin().getServer().getWorlds()) {
+                        final String response4 = "case=worldData;" + WebOpPlugin.PluginContext.getWorldMonitor().getWorldDetails(world2);
+                        this.sendMessage(session, response4);
+                    }
+                    break;
+                }
             }
-        }
+        });
     }
 
     @OnWebSocketClose
     public void onClose(final int statusCode, final String reason) {
         final Iterator<Session> iterator = WebOpPlugin.PluginContext.getSessionManager().getSessions().iterator();
-        WebOpUser closedUser = null;
         while (iterator.hasNext()) {
             final Session sess = iterator.next();
             if (!sess.isOpen()) {
@@ -283,7 +274,6 @@ public class MyWebSocket {
                     final WebOpUser user = WebOpPlugin.PluginContext.getSessionManager().getLoggedInUsers().get(i);
                     if (user.getWebSocketSession().equals(sess)) {
                         user.setWebSocketSession(null);
-                        closedUser = user;
                         WebOpPlugin.PluginContext.getConsoleMonitor().removeSubscriber(user.getName());
                         WebOpPlugin.PluginContext.getPlayerMonitor().removeSubscriber(user.getName());
                         WebOpPlugin.PluginContext.getWorldMonitor().removeSubscriber(user.getName());
